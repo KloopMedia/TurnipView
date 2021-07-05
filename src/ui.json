@@ -1,0 +1,1 @@
+{"isLawViolation":{"ui:widget":"radio"},"lawViolationDetails":{"ui:widget":"textarea"},"systemFailExplanation":{"ui:widget":"textarea"},"file_test":{"ui:widget":"file"},"newInput1":{"newInput1":{"test2":{"ui:widget":"file"},"ui:order":["test2"]},"ui:order":["newInput1"]},"ui:order":["isLawViolation","lawViolationDetails","systemFailExplanation","file_test","newInput1"]}
