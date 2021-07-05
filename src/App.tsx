@@ -13,8 +13,8 @@ window.Android = window.Android || {};
 // const evt = new Event('android_event', {'bubbles':true, 'cancelable':false});
 
 function App() {
-    const [schema, setSchema] = useState();
-    const [uiSchema, setUiSchema] = useState();
+    const [schema, setSchema] = useState({});
+    const [uiSchema, setUiSchema] = useState({});
     const [data, setData] = useState({});
     const [exampleText, setExampleText] = useState("")
 
@@ -25,11 +25,19 @@ function App() {
     useEffect(() => {
         //const evt = new Event('android_event', {'bubbles':true, 'cancelable':false});
         // @ts-ignore
-        window.addEventListener('android_formdata_event', e => setExampleText(e.detail));
+        console.log("TEST CONSOLE LOG")
+        window.addEventListener('android_formdata_event', (e: any) => console.log("Formdata event", e))
+            // {
+                // console.log("schemas received: ", e.jsonSchema)
+                // setExampleText(JSON.parse(e.formData))
+                // setSchema(JSON.parse(e.jsonSchema))
+                // setUiSchema(JSON.parse(e.uiSchema))
+            // }
+        // );
         return () => {
             //window.removeEventListener('android_event', e => {setExampleText(e + "Something is happening!")});
             // @ts-ignore
-            window.removeEventListener('android_formdata_event', e => setExampleText(e.detail));
+            window.removeEventListener('android_formdata_event', e => setExampleText(e.formData));
         };
     }, []);
 
@@ -56,8 +64,8 @@ function App() {
 
     return (
         <div style={{padding: 15}}>
-            <Form schema={schemaJson as any}
-                  uiSchema={schemaUi}
+            <Form schema={schema as any}
+                  uiSchema={uiSchema}
                   formData={data}
                   widgets={widgets}
                   onChange={handleChange}

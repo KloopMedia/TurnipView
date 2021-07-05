@@ -41,6 +41,7 @@ const CustomFileWidget = (props: any) => {
                 type="file"
                 onChange={handleChange}
                 multiple={props.allowMultipleFiles}
+                onClick={ () => window.Android.pickVideo() }
             />
             {files.map((file: any, i: number) => {
                 <div key={`${file.filename}_${i}`}>
