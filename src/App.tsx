@@ -23,13 +23,23 @@ function App() {
     };
 
     useEffect(() => {
-        //const evt = new Event('android_event', {'bubbles':true, 'cancelable':false});
         // @ts-ignore
-        window.addEventListener('android_event', e => console.log("Event inside webview", e.detail));
+        window.addEventListener('android_json_event', (e: any) => {
+                console.log(JSON.stringify(e.detail))
+                setSchema(JSON.parse(e.detail))
+            }
+        )
+        // @ts-ignore
+        window.addEventListener('android_ui_event', (e: any) => {
+                console.log(JSON.stringify(e.detail))
+                setUiSchema(JSON.parse(e.detail))
+            }
+        )
         return () => {
-            //window.removeEventListener('android_event', e => {setExampleText(e + "Something is happening!")});
             // @ts-ignore
-            window.removeEventListener('android_event', e => console.log("Event inside webview", e.detail));
+            window.removeEventListener('android_json_event', e => console.log("Event inside webview", e.detail));
+            // @ts-ignore
+            window.removeEventListener('android_ui_event', e => console.log("Event inside webview", e.detail));
         };
     }, []);
 
