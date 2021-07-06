@@ -25,19 +25,11 @@ function App() {
     useEffect(() => {
         //const evt = new Event('android_event', {'bubbles':true, 'cancelable':false});
         // @ts-ignore
-        console.log("TEST CONSOLE LOG")
-        window.addEventListener('android_formdata_event', (e: any) => console.log("Formdata event", e))
-            // {
-                // console.log("schemas received: ", e.jsonSchema)
-                // setExampleText(JSON.parse(e.formData))
-                // setSchema(JSON.parse(e.jsonSchema))
-                // setUiSchema(JSON.parse(e.uiSchema))
-            // }
-        // );
+        window.addEventListener('android_event', e => console.log("Event inside webview", e.detail));
         return () => {
             //window.removeEventListener('android_event', e => {setExampleText(e + "Something is happening!")});
             // @ts-ignore
-            window.removeEventListener('android_formdata_event', e => setExampleText(e.formData));
+            window.removeEventListener('android_event', e => console.log("Event inside webview", e.detail));
         };
     }, []);
 
