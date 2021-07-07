@@ -16,7 +16,6 @@ function App() {
     const [schema, setSchema] = useState({});
     const [uiSchema, setUiSchema] = useState({});
     const [data, setData] = useState({});
-    const [exampleText, setExampleText] = useState("")
 
     const widgets = {
         file: CustomFileWidget
@@ -48,28 +47,22 @@ function App() {
             window.removeEventListener('android_json_event', e => console.log("Event inside webview", e.detail));
             // @ts-ignore
             window.removeEventListener('android_ui_event', e => console.log("Event inside webview", e.detail));
+            // @ts-ignore
+            window.removeEventListener('android_data_event', e => console.log("Event inside webview", e.detail));
         };
     }, []);
-
-    const handleFileChange = (change: any) => {
-        console.log(change)
-    }
 
     // @ts-ignore
     const handleChange = (v) => {
         setData(v.formData)
-        let stringData = JSON.stringify(v.formData)
-        if ("Android" in window) {
-            window.Android.setFormData(stringData);
-        }
-        // for (let prop in window)
-        //     console.log(prop);
-        // if ("Android" in window)
-        //     console.log(window.Android);
     };
 
     const handleSubmit = (e: any) => {
         setData(e.formData)
+        let stringData = JSON.stringify(e.formData)
+        if ("Android" in window) {
+            window.Android.setFormData(stringData);
+        }
     }
 
     return (

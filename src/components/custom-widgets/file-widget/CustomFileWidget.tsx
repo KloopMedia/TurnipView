@@ -5,18 +5,17 @@ import LinearProgressWithLabel from './LinearProgressWithLabel'
 window.Android = window.Android || {};
 
 const CustomFileWidget = (props: any) => {
-    const [formData, setFormData] = useState({...props.formData})
-    const [files, setFiles] = useState<any>([])
+    const {schema, id } = props;
 
-    useEffect(() => {
-        props.onChange(formData)
-    }, [formData])
-
-    console.log(props)
+    // useEffect(() => {
+    //     props.onChange(formData)
+    // }, [formData])
+    //
+    // console.log(props)
 
     const handleChange = (event: any) => {
         const lFiles = [...event.target.files]
-        setFiles(lFiles)
+        // setFiles(lFiles)
         // if ("Android" in window) {
         //     window.Android.showToast(test);
         // }
@@ -35,22 +34,28 @@ const CustomFileWidget = (props: any) => {
         // };
     }
 
+    const handleClick = () => {
+        if ("Android" in window) {
+            window.Android.pickVideo();
+        }
+    }
+
     return (
         <div>
+            <label className={"form-label"}>{schema?.title}</label>
+            <br/>
             <input
+                // onChange={handleChange}
                 type="file"
-                onChange={handleChange}
-                multiple={props.allowMultipleFiles}
-                onClick={ () => window.Android.pickVideo() }
+                onClick={handleClick}
             />
-            {files.map((file: any, i: number) => {
-                <div key={`${file.filename}_${i}`}>
-                    <p>{file.filename}</p>
-                    <LinearProgressWithLabel value={file.progress}/>
-                </div>
-            })}
+            {/*{files.map((file: any, i: number) => {*/}
+            {/*    <div key={`${file.filename}_${i}`}>*/}
+            {/*        <p>{file.filename}</p>*/}
+            {/*        <LinearProgressWithLabel value={file.progress}/>*/}
+            {/*    </div>*/}
+            {/*})}*/}
         </div>
-
     )
 }
 
