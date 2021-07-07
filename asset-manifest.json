@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/turnipview/static/css/main.1635e87c.chunk.css",
+    "main.js": "/turnipview/static/js/main.a05f270d.chunk.js",
+    "main.js.map": "/turnipview/static/js/main.a05f270d.chunk.js.map",
+    "runtime-main.js": "/turnipview/static/js/runtime-main.97423624.js",
+    "runtime-main.js.map": "/turnipview/static/js/runtime-main.97423624.js.map",
+    "static/css/2.d45d6843.chunk.css": "/turnipview/static/css/2.d45d6843.chunk.css",
+    "static/js/2.678a20d8.chunk.js": "/turnipview/static/js/2.678a20d8.chunk.js",
+    "static/js/2.678a20d8.chunk.js.map": "/turnipview/static/js/2.678a20d8.chunk.js.map",
+    "static/js/3.5a7822a6.chunk.js": "/turnipview/static/js/3.5a7822a6.chunk.js",
+    "static/js/3.5a7822a6.chunk.js.map": "/turnipview/static/js/3.5a7822a6.chunk.js.map",
+    "index.html": "/turnipview/index.html",
+    "static/css/2.d45d6843.chunk.css.map": "/turnipview/static/css/2.d45d6843.chunk.css.map",
+    "static/css/main.1635e87c.chunk.css.map": "/turnipview/static/css/main.1635e87c.chunk.css.map",
+    "static/js/2.678a20d8.chunk.js.LICENSE.txt": "/turnipview/static/js/2.678a20d8.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.97423624.js",
+    "static/css/2.d45d6843.chunk.css",
+    "static/js/2.678a20d8.chunk.js",
+    "static/css/main.1635e87c.chunk.css",
+    "static/js/main.a05f270d.chunk.js"
+  ]
+}
