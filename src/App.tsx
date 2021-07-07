@@ -35,6 +35,14 @@ function App() {
                 setUiSchema(JSON.parse(e.detail))
             }
         )
+
+        // @ts-ignore
+        window.addEventListener('android_data_event', (e: any) => {
+                console.log(JSON.stringify(e.detail))
+                setData(JSON.parse(e.detail))
+            }
+        )
+        window.Android.listenersReady();
         return () => {
             // @ts-ignore
             window.removeEventListener('android_json_event', e => console.log("Event inside webview", e.detail));
