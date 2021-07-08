@@ -92,6 +92,7 @@ function App() {
                   uiSchema={uiSchema}
                   formData={data}
                   widgets={widgets}
+                  disabled={isComplete}
                   formContext={fileData}
                   onChange={handleChange}
                   onSubmit={handleSubmit}

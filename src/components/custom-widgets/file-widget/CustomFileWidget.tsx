@@ -13,7 +13,7 @@ const CustomFileWidget = (props: any) => {
             let external_id = Object.keys(formContext).pop()
             if (external_id && external_id === id) {
                 console.log("SAME ID")
-                let p = formContext[external_id]
+                let p = formContext[external_id].progress
                 setProgress(p)
             }
         }
