@@ -5,7 +5,19 @@ import LinearProgressWithLabel from './LinearProgressWithLabel'
 window.Android = window.Android || {};
 
 const CustomFileWidget = (props: any) => {
-    const {schema, id } = props;
+    const {schema, id, formContext, disabled} = props;
+    const [progress, setProgress] = useState(0)
+
+    useEffect(() => {
+        if (formContext) {
+            let external_id = Object.keys(formContext).pop()
+            if (external_id && external_id === id) {
+                console.log("SAME ID")
+                let p = formContext[external_id]
+                setProgress(p)
+            }
+        }
+    }, [formContext])
 
     // useEffect(() => {
     //     props.onChange(formData)
@@ -13,30 +25,30 @@ const CustomFileWidget = (props: any) => {
     //
     // console.log(props)
 
-    const handleChange = (event: any) => {
-        const lFiles = [...event.target.files]
-        // setFiles(lFiles)
-        // if ("Android" in window) {
-        //     window.Android.showToast(test);
-        // }
-        // console.log("Files selected: ", file)
-        // var reader = new FileReader();
-        // reader.onload = function (event:any) {
-        //     // The file's text will be printed here
-        //     let blob = new Blob([new Uint8Array(event.target.result)], {type: file.type });
-        //     console.log(event.target.result)
-        //     console.log(blob)
-        // };
-        //
-        // reader.readAsDataURL(file);
-        // return (event: any) => {
-        //     setFormData(files)
-        // };
-    }
+    // const handleChange = (event: any) => {
+    // const lFiles = [...event.target.files]
+    // setFiles(lFiles)
+    // if ("Android" in window) {
+    //     window.Android.showToast(test);
+    // }
+    // console.log("Files selected: ", file)
+    // var reader = new FileReader();
+    // reader.onload = function (event:any) {
+    //     // The file's text will be printed here
+    //     let blob = new Blob([new Uint8Array(event.target.result)], {type: file.type });
+    //     console.log(event.target.result)
+    //     console.log(blob)
+    // };
+    //
+    // reader.readAsDataURL(file);
+    // return (event: any) => {
+    //     setFormData(files)
+    // };
+    // }
 
     const handleClick = () => {
         if ("Android" in window) {
-            window.Android.pickVideo();
+            window.Android.pickFile(id);
         }
     }
 
@@ -47,8 +59,10 @@ const CustomFileWidget = (props: any) => {
             <input
                 // onChange={handleChange}
                 type="file"
+                disabled={disabled}
                 onClick={handleClick}
             />
+            <LinearProgressWithLabel value={progress}/>
             {/*{files.map((file: any, i: number) => {*/}
             {/*    <div key={`${file.filename}_${i}`}>*/}
             {/*        <p>{file.filename}</p>*/}

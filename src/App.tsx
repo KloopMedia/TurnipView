@@ -16,9 +16,10 @@ function App() {
     const [schema, setSchema] = useState({});
     const [uiSchema, setUiSchema] = useState({});
     const [data, setData] = useState({});
+    const [fileData, setFileData] = useState({})
 
     const widgets = {
-        file: CustomFileWidget
+        customfile: CustomFileWidget
     };
 
     useEffect(() => {
@@ -34,11 +35,16 @@ function App() {
                 setUiSchema(JSON.parse(e.detail))
             }
         )
-
         // @ts-ignore
         window.addEventListener('android_data_event', (e: any) => {
-                console.log(JSON.stringify(e.detail))
+                console.log("JS FORMDATA",JSON.stringify(e.detail))
                 setData(JSON.parse(e.detail))
+            }
+        )
+        // @ts-ignore
+        window.addEventListener('android_file_event', (e: any) => {
+                console.log(JSON.stringify(e.detail))
+                setFileData(JSON.parse(e.detail))
             }
         )
         window.Android.listenersReady();
@@ -49,6 +55,8 @@ function App() {
             window.removeEventListener('android_ui_event', e => console.log("Event inside webview", e.detail));
             // @ts-ignore
             window.removeEventListener('android_data_event', e => console.log("Event inside webview", e.detail));
+            // @ts-ignore
+            window.removeEventListener('android_file_event', e => console.log("Event inside webview", e.detail));
         };
     }, []);
 
@@ -71,6 +79,7 @@ function App() {
                   uiSchema={uiSchema}
                   formData={data}
                   widgets={widgets}
+                  formContext={fileData}
                   onChange={handleChange}
                   onSubmit={handleSubmit}
             />
