@@ -37,6 +37,7 @@ const CustomFileWidget = (props: any) => {
             <Button
                 disabled={disabled}
                 onClick={handleClick}
+                size="sm"
             >
                 Upload File
             </Button>
