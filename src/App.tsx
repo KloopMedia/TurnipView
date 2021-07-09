@@ -5,6 +5,7 @@ import './App.css';
 import schemaJson from './schema.json'
 import schemaUi from './ui.json'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import {Button} from "react-bootstrap";
 
 declare global {
     interface Window {
@@ -87,7 +88,7 @@ function App() {
     }
 
     return (
-        <div style={{padding: 15}}>
+        <div style={{padding: 15, backgroundColor: "transparent"}}>
             <Form schema={schema as any}
                   uiSchema={uiSchema}
                   formData={data}
@@ -96,7 +97,9 @@ function App() {
                   formContext={fileData}
                   onChange={handleChange}
                   onSubmit={handleSubmit}
-            />
+            >
+                <Button type={"submit"} disabled={isComplete}>Submit</Button>
+            </Form>
         </div>
     );
 }

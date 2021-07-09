@@ -1,12 +1,12 @@
-import {Button} from '@material-ui/core'
 import React, {useEffect, useState} from 'react'
 import LinearProgressWithLabel from './LinearProgressWithLabel'
+import {Button} from "react-bootstrap";
 
 window.Android = window.Android || {};
 
 const CustomFileWidget = (props: any) => {
     const {schema, id, formContext, disabled} = props;
-    const [files, setFiles] = useState<{fileName: string, progress: number} | undefined>()
+    const [files, setFiles] = useState<{ fileName: string, progress: number } | undefined>()
 
     useEffect(() => {
         if (formContext) {
@@ -34,13 +34,19 @@ const CustomFileWidget = (props: any) => {
         <div>
             <label className={"form-label"}>{schema?.title}</label>
             <br/>
-            <input
-                // onChange={handleChange}
-                type="file"
+            <Button
                 disabled={disabled}
                 onClick={handleClick}
-            />
-            {files?.progress && <div key={`${files?.fileName}`} style={{paddingTop: 10}}>
+            >
+                Upload File
+            </Button>
+            {/*<input*/}
+            {/*    style={{background: 'blue'}}*/}
+            {/*    type="file"*/}
+            {/*    disabled={disabled}*/}
+            {/*    onClick={handleClick}*/}
+            {/*/>*/}
+            {files && <div key={`${files?.fileName}`} style={{paddingTop: 10}}>
                 <p>{files?.fileName}</p>
                 <LinearProgressWithLabel value={files?.progress ?? 0}/>
             </div>}
