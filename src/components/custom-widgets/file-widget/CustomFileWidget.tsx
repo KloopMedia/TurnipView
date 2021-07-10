@@ -6,7 +6,7 @@ window.Android = window.Android || {};
 
 const CustomFileWidget = (props: any) => {
     const {schema, id, formContext, disabled} = props;
-    const [files, setFiles] = useState<{ fileName: string, progress: number } | undefined>()
+    const [files, setFiles] = useState<{ fileName: string, progress: number }[] | undefined>([])
 
     useEffect(() => {
         if (formContext) {
@@ -41,22 +41,13 @@ const CustomFileWidget = (props: any) => {
             >
                 Upload File
             </Button>
-            {/*<input*/}
-            {/*    style={{background: 'blue'}}*/}
-            {/*    type="file"*/}
-            {/*    disabled={disabled}*/}
-            {/*    onClick={handleClick}*/}
-            {/*/>*/}
-            {files && <div key={`${files?.fileName}`} style={{paddingTop: 10}}>
-                <p>{files?.fileName}</p>
-                <LinearProgressWithLabel value={files?.progress ?? 0}/>
-            </div>}
-            {/*{files.map((file: any, i: number) => {*/}
-            {/*    <div key={`${file.filename}_${i}`}>*/}
-            {/*        <p>{file.filename}</p>*/}
-            {/*        <LinearProgressWithLabel value={file.progress}/>*/}
-            {/*    </div>*/}
-            {/*})}*/}
+
+            {files && files.map((file: any, i: number) => (
+                <div key={`${file?.fileName}_${i}`} style={{paddingTop: 10}}>
+                    <p>{file?.fileName}</p>
+                    <LinearProgressWithLabel value={file?.progress ?? 0}/>
+                </div>
+            ))}
         </div>
     )
 }
