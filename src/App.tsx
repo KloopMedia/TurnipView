@@ -88,7 +88,7 @@ function App() {
     }
 
     return (
-        <div style={{padding: 15, backgroundColor: "transparent"}}>
+        <div style={{padding: 15, backgroundColor: "#26282F"}}>
             <Form schema={schema as any}
                   uiSchema={uiSchema}
                   formData={data}
@@ -98,7 +98,7 @@ function App() {
                   onChange={handleChange}
                   onSubmit={handleSubmit}
             >
-                <Button type={"submit"} disabled={isComplete}>Submit</Button>
+                <Button type={"submit"} style={{backgroundColor: "#1EB980"}} disabled={isComplete}>Submit</Button>
             </Form>
         </div>
     );
