@@ -76,7 +76,7 @@ function App() {
     }
 
     return (
-        <div>
+        <div style={{padding: 4}}>
             <Form schema={schema as any}
                   uiSchema={uiSchema}
                   formData={data}
