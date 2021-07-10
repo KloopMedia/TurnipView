@@ -28,18 +28,6 @@ function App() {
     };
 
     useEffect(() => {
-        // // @ts-ignore
-        // window.addEventListener('android_json_event', (e: any) => {
-        //         console.log(JSON.stringify(e.detail))
-        //         setSchema(JSON.parse(e.detail))
-        //     }
-        // )
-        // // @ts-ignore
-        // window.addEventListener('android_ui_event', (e: any) => {
-        //         console.log(JSON.stringify(e.detail))
-        //         setUiSchema(JSON.parse(e.detail))
-        //     }
-        // )
         // @ts-ignore
         window.addEventListener('android_schema_event', (e: any) => {
                 console.log(JSON.stringify(e.detail))
@@ -88,7 +76,7 @@ function App() {
     }
 
     return (
-        <div style={{padding: 15, backgroundColor: "#26282F"}}>
+        <div>
             <Form schema={schema as any}
                   uiSchema={uiSchema}
                   formData={data}

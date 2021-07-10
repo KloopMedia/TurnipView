@@ -3,12 +3,12 @@ import LinearProgressWithLabel from './LinearProgressWithLabel'
 import {Button} from "react-bootstrap";
 import {Typography} from "@material-ui/core";
 
-type fileParams = { fileName: string, progress: number, url?: string }
+type fileParams = { fileName: string, progress: number, downloadUri?: string }
 
 window.Android = window.Android || {};
 
 const CustomFileWidget = (props: any) => {
-    const {schema, id, formContext, disabled} = props;
+    const {schema, id, formContext, disabled, value} = props;
     const [files, setFiles] = useState<fileParams[] | undefined>([])
 
     useEffect(() => {
@@ -24,15 +24,26 @@ const CustomFileWidget = (props: any) => {
     }, [formContext])
 
     useEffect(() => {
+        console.log("value", value)
+        if (value) {
+            let parsed = JSON.parse(value)
+            let newFiles = Object.keys(parsed).map(filename => {
+                return {fileName: filename, downloadUri: parsed[filename], progress: 100}
+            })
+            setFiles(newFiles)
+        }
+    }, [value])
+
+    useEffect(() => {
         if (files && files?.length > 0) {
             let filesObj: any = {}
             files.forEach(file => {
-                if (file.url) {
-                    filesObj[file.fileName] = file.url
+                if (file.downloadUri) {
+                    filesObj[file.fileName] = file.downloadUri
                 }
             })
-            let parsed = JSON.stringify(filesObj)
-            props.onChange(parsed)
+            let stringify = JSON.stringify(filesObj)
+            props.onChange(stringify)
         }
     }, [files])
 
@@ -59,7 +70,7 @@ const CustomFileWidget = (props: any) => {
                 <div key={`${file?.fileName}_${i}`} style={{paddingTop: 10}}>
                     <div style={{display: 'flex'}}>
                         <p>{file?.fileName}</p>
-                        {file?.progress == 100 && <p className="text-success" style={{paddingRight: 5}}>File Saved</p>}
+                        {file?.progress == 100 && <a className="text-success" href={file?.downloadUri} style={{paddingLeft: 10}}>File Saved</a>}
                     </div>
                     {parseInt(file?.progress) < 100 && <LinearProgressWithLabel value={file?.progress ?? 0}/>}
                 </div>
