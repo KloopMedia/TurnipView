@@ -83,7 +83,7 @@ function App() {
         setData(e.formData)
         let stringData = JSON.stringify(e.formData)
         if ("Android" in window) {
-            window.Android.setFormData(stringData);
+            window.Android.onFormSubmit(stringData);
         }
     }
 
