@@ -47,11 +47,18 @@ const CustomFileWidget = (props: any) => {
         }
     }, [files])
 
-    const handleClick = () => {
+    const handleVideoClick = () => {
         if ("Android" in window) {
-            window.Android.pickFile(id);
+            window.Android.pickVideo(id);
+            // window.Android.pickFile(id);
         }
     }
+
+    const handlePhotoClick = () => {
+        if ("Android" in window) {
+            window.Android.pickPhoto(id);
+        }
+    };
 
     return (
         <div>
@@ -59,11 +66,19 @@ const CustomFileWidget = (props: any) => {
             <br/>
             <Button
                 disabled={disabled}
-                onClick={handleClick}
+                onClick={handlePhotoClick}
+                style={{backgroundColor: "#1EB980", marginRight: 5}}
+                size="sm"
+            >
+                Photo
+            </Button>
+            <Button
+                disabled={disabled}
+                onClick={handleVideoClick}
                 style={{backgroundColor: "#1EB980"}}
                 size="sm"
             >
-                Upload File
+                Video
             </Button>
 
             {files && files.map((file: any, i: number) => (
