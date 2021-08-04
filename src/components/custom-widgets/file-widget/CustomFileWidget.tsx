@@ -49,14 +49,14 @@ const CustomFileWidget = (props: any) => {
 
     const handleVideoClick = () => {
         if ("Android" in window) {
-            window.Android.pickVideo(id);
+            window.Android.pickVideos(id);
             // window.Android.pickFile(id);
         }
     }
 
     const handlePhotoClick = () => {
         if ("Android" in window) {
-            window.Android.pickPhoto(id);
+            window.Android.pickPhotos(id);
         }
     };
 
