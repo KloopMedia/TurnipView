@@ -45,7 +45,7 @@ function App() {
         )
         // @ts-ignore
         window.addEventListener('android_file_event', (e: any) => {
-                console.log(JSON.stringify(e.detail))
+                console.log("FILEDATA", JSON.stringify(e.detail))
                 setFileData(JSON.parse(e.detail))
             }
         )
@@ -77,8 +77,8 @@ function App() {
 
     return (
         <div style={{padding: 4}}>
-            <Form schema={schema as any}
-                  uiSchema={uiSchema}
+            <Form schema={schema as any ?? schemaJson}
+                  uiSchema={uiSchema ?? schemaUi}
                   formData={data}
                   widgets={widgets}
                   disabled={isComplete}

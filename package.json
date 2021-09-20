@@ -5,6 +5,7 @@
   "private": false,
   "dependencies": {
     "@material-ui/core": "^4.11.4",
+    "@material-ui/icons": "^4.11.2",
     "@rjsf/bootstrap-4": "^2.5.1",
     "@rjsf/core": "^2.5.1",
     "@testing-library/jest-dom": "^5.14.1",
