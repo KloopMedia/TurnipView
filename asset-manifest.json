@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/TurnipView/static/css/main.1635e87c.chunk.css",
-    "main.js": "/TurnipView/static/js/main.f47d6605.chunk.js",
-    "main.js.map": "/TurnipView/static/js/main.f47d6605.chunk.js.map",
+    "main.js": "/TurnipView/static/js/main.96af9958.chunk.js",
+    "main.js.map": "/TurnipView/static/js/main.96af9958.chunk.js.map",
     "runtime-main.js": "/TurnipView/static/js/runtime-main.7cc6d9ee.js",
     "runtime-main.js.map": "/TurnipView/static/js/runtime-main.7cc6d9ee.js.map",
     "static/css/2.d45d6843.chunk.css": "/TurnipView/static/css/2.d45d6843.chunk.css",
@@ -20,6 +20,6 @@
     "static/css/2.d45d6843.chunk.css",
     "static/js/2.11ddbe92.chunk.js",
     "static/css/main.1635e87c.chunk.css",
-    "static/js/main.f47d6605.chunk.js"
+    "static/js/main.96af9958.chunk.js"
   ]
 }
