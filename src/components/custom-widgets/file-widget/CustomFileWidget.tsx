@@ -1,8 +1,7 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import LinearProgressWithLabel from './LinearProgressWithLabel'
-import {Button} from "react-bootstrap";
-import {Typography, IconButton} from "@material-ui/core";
-import ClearIcon from '@material-ui/icons/Clear';
+import { Typography, Button, Stack } from "@mui/material";
+import CustomButton from '../../CustomButton'
 
 
 type fileParams = { fileName: string, progress: number, downloadUri?: string, storagePath?: string }
@@ -10,9 +9,9 @@ type fileParams = { fileName: string, progress: number, downloadUri?: string, st
 window.Android = window.Android || {};
 
 const CustomFileWidget = (props: any) => {
-    const {schema, id, formContext, disabled, value} = props;
-    const [files, setFiles] = useState<fileParams[] | undefined>([])
-    const [storage, setStorage] = useState<any>({})
+    const { schema, uiSchema, id, formContext, disabled, value } = props;
+    const privateUpload = uiSchema["ui:options"] ? uiSchema["ui:options"].private : false
+    const [files, setFiles] = useState<fileParams[] | undefined>()
 
     useEffect(() => {
         if (formContext) {
@@ -21,7 +20,7 @@ const CustomFileWidget = (props: any) => {
                 console.log("SAME ID")
                 let filesData = formContext[id]
                 console.log("filesData", JSON.stringify(filesData))
-                setFiles(filesData)            
+                setFiles(filesData)
             }
         }
     }, [id, formContext])
@@ -31,7 +30,7 @@ const CustomFileWidget = (props: any) => {
         if (value) {
             let parsed = JSON.parse(value)
             let newFiles = Object.keys(parsed).map(filename => {
-                return {fileName: filename, downloadUri: parsed[filename].url, storagePath: parsed[filename].storagePath, progress: 100}
+                return { fileName: filename, downloadUri: parsed[filename].url, storagePath: parsed[filename].storagePath, progress: 100 }
             })
             setFiles(newFiles)
         }
@@ -44,10 +43,10 @@ const CustomFileWidget = (props: any) => {
             let filesObj: any = {}
             files.forEach(file => {
                 if (file.downloadUri) {
-                    filesObj[file.fileName] = {url: file.downloadUri, storagePath: file.storagePath}
+                    filesObj[file.fileName] = { url: file.downloadUri, storagePath: file.storagePath }
                 }
                 else {
-                    filesObj[file.fileName] = {url: "", storagePath: ""}
+                    filesObj[file.fileName] = { url: "", storagePath: "" }
                 }
             })
             let stringify = JSON.stringify(filesObj)
@@ -57,30 +56,21 @@ const CustomFileWidget = (props: any) => {
 
     const handleVideoClick = () => {
         if ("Android" in window) {
-            window.Android.pickVideos(id);
-            // window.Android.pickFile(id);
+            window.Android.pickVideos(id, privateUpload);
         }
     }
 
     const handlePhotoClick = () => {
         if ("Android" in window) {
-            window.Android.pickPhotos(id);
+            window.Android.pickPhotos(id, privateUpload);
         }
     };
 
-    const removeFile = (fileName: string, storagePath: string, progress: number) => {
-        // TODO: If file is loading, stops loading. If file is already loaded, removes file
+    const removeFile = (fileName: string, storagePath: string) => {
         if ("Android" in window) {
             const filePath = storagePath + fileName
-            if (progress === 100) {
-                console.log("Delete File", fileName, storagePath)
-                window.Android.deleteFile(filePath)
-            }
-            else {
-                console.log("Cancel File", fileName, storagePath)
-                window.Android.cancelWork(fileName)
-            }
-            
+            console.log("Delete File", fileName, storagePath)
+            window.Android.deleteFile(filePath)
         }
     }
 
@@ -98,40 +88,72 @@ const CustomFileWidget = (props: any) => {
         }
     }
 
+    const ControlButtons = (props: {progress: number, url: string, name: string, path: string}) => {
+        const { progress, name, url, path } = props;
+
+        if (progress < 100) {
+            return (
+                <Button variant="text" size="small" onClick={() => cancelWork(name)}>Cancel</Button>
+            )
+        }
+        if (progress === 100) {
+            return (
+                <>
+                    <Button variant="text" size="small" onClick={() => removeFile(name, path)}>Remove</Button>
+                    <Button variant="text" size="small" onClick={() => previewFile(url)}>Preview</Button>
+                </>
+            )
+        }
+        return null;
+    }
+
+
+
     return (
         <div>
             <label className={"form-label"}>{schema?.title}</label>
-            <br/>
-            <Button
-                disabled={disabled}
-                onClick={handlePhotoClick}
-                style={{backgroundColor: "#1EB980", marginRight: 5}}
-                size="sm"
-            >
-                Photo
-            </Button>
-            <Button
-                disabled={disabled}
-                onClick={handleVideoClick}
-                style={{backgroundColor: "#1EB980"}}
-                size="sm"
-            >
-                Video
-            </Button>
+            <br />
+            <Stack spacing={1} direction="row">
+                <CustomButton
+                    disabled={disabled}
+                    onClick={handlePhotoClick}
+                    size="small"
+                >
+                    Photo
+                </CustomButton>
+                <CustomButton
+                    disabled={disabled}
+                    onClick={handleVideoClick}
+                    size="small"
+                >
+                    Video
+                </CustomButton>
+            </Stack>
 
 
-            {files && files.map((file: any, i: number) => file && (
-                <div key={`${file.fileName}_${i}`} style={{paddingTop: 10}}>
-                    <div style={{display: 'flex', alignItems: "center"}}>
-                        <Typography>{file.fileName}</Typography>
-                        {file.progress == 100 && <Button onClick={() => removeFile(file.fileName, file.storagePath, file.progress)}>Remove</Button>}
-                        {parseInt(file.progress) < 100 && <Button onClick={() => cancelWork(file.fileName)}>Clear</Button>}
-                        {file.progress == 100 && <Button onClick={() => previewFile(file.downloadUri)}>Preview</Button>}
-                        {/* {file.progress == 100 && <a className="text-success" href={file.downloadUri} style={{paddingLeft: 10}}>File Saved</a>} */}
-                    </div>
-                    {parseInt(file.progress) < 100 && <LinearProgressWithLabel value={parseInt(file.progress) ?? 0}/>}
-                </div>
-            ))}
+
+            {files && files.map((file: any, i: number) => {
+                if (file) {
+                    const progress = typeof file.progress === "string" ? parseInt(file.progress) : file.progress;
+                    const name = file.fileName;
+                    const path = file.storagePath ?? "";
+                    const url = file.downloadUri ?? "";
+
+                    return (
+                        <div key={`${name}_${i}`} style={{ paddingTop: 10 }}>
+                            <Stack spacing={1} direction="row" alignItems="center">
+                                <Typography noWrap >{name}</Typography>
+                                <ControlButtons name={name} url={url} path={path}  progress={progress} />
+                                {/* {file.progress == 100 && <a className="text-success" href={file.downloadUri} style={{paddingLeft: 10}}>File Saved</a>} */}
+                            </Stack>
+                            {progress < 100 && <LinearProgressWithLabel value={progress ?? 0} />}
+                        </div>
+                    )
+                }
+                else {
+                    return null
+                }
+            })}
         </div>
     )
 }
