@@ -9,7 +9,7 @@ type fileParams = { fileName: string, progress: number, downloadUri?: string, st
 window.Android = window.Android || {};
 
 const CustomFileWidget = (props: any) => {
-    const { schema, uiSchema, id, formContext, disabled, value } = props;
+    const { schema, uiSchema, id, formContext, disabled, onChange, value } = props;
     const privateUpload = uiSchema["ui:options"] ? uiSchema["ui:options"].private : false
     const [files, setFiles] = useState<fileParams[] | undefined>()
 
@@ -50,9 +50,9 @@ const CustomFileWidget = (props: any) => {
                 }
             })
             let stringify = JSON.stringify(filesObj)
-            props.onChange(stringify)
+            onChange(stringify)
         }
-    }, [files])
+    }, [files, onChange])
 
     const handleVideoClick = () => {
         if ("Android" in window) {
