@@ -111,9 +111,6 @@ function App() {
                     formData={parsedResponses}
                     widgets={widgets}
                     disabled={true}
-                    formContext={fileData}
-                    onChange={handleChange}
-                    onSubmit={handleSubmit}
                 >  </Form>
             )
         })
