@@ -6,6 +6,7 @@ import schemaJson from './schema.json'
 import schemaUi from './ui.json'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import CustomButton from './components/CustomButton'
+import TextViewer from './components/text-editor/TextViewer';
 
 declare global {
     interface Window {
@@ -21,7 +22,7 @@ function App() {
     const [uiSchema, setUiSchema] = useState({});
     const [data, setData] = useState({});
     const [fileData, setFileData] = useState({})
-    const [previousTasks, setPreviousTasks] = useState([])
+    const [previousTasks, setPreviousTasks] = useState<any>([])
     const [richText, setRichText] = useState("")
     const [isComplete, setIsComplete] = useState(false)
 
@@ -32,7 +33,7 @@ function App() {
     useEffect(() => {
         // @ts-ignore
         window.addEventListener('android_schema_event', (e: any) => {
-            console.log(JSON.stringify(e.detail))
+            console.log("SCHEMA", JSON.stringify(e.detail))
             const stageData = JSON.parse(e.detail)
             setSchema(stageData.jsonSchema)
             setUiSchema(stageData.uiSchema)
@@ -53,7 +54,7 @@ function App() {
         )
         window.addEventListener('android_rich_text_event', (e: any) => {
             console.log("RICH TEXT", JSON.stringify(e.detail))
-            setRichText(JSON.parse(e.detail))
+            setRichText(e.detail)
         }
         )
         window.addEventListener('android_previous_tasks_event', (e: any) => {
@@ -96,14 +97,17 @@ function App() {
     }
 
     const renderPreviousTasks = () => {
-        return previousTasks.map((task: { jsonSchema: string, uiSchema: string, responses: any }) => {
-            const parsedJson = JSON.parse(task.jsonSchema)
-            const parsedUi = JSON.parse(task.uiSchema)
-            const parsedResponses = JSON.parse(task.responses)
+        console.log("atai test", previousTasks)
+        return previousTasks.map((task: { jsonSchema: string, uiSchema: string, responses: any }, i: number) => {
+            const parsedJson = task.jsonSchema
+            const parsedUi = task.uiSchema
+            const parsedResponses = task.responses
+            console.log("Prev Task", task)
 
             return (
-                <Form schema={parsedJson as any}
-                    uiSchema={parsedUi}
+                <Form key={i} 
+                    schema={parsedJson as any}
+                    uiSchema={parsedUi as any}
                     formData={parsedResponses}
                     widgets={widgets}
                     disabled={true}
@@ -112,13 +116,21 @@ function App() {
                     onSubmit={handleSubmit}
                 >  </Form>
             )
-        }
-        )
+        })
+    }
+
+    const renderTextViewer = () => {
+        console.log("TEXT VIEWER", richText)
+        return <TextViewer data={richText} />
     }
 
     return (
         <div style={{ padding: 4 }}>
+            {richText && renderTextViewer()}
+            <p>Previous tasks:</p>
             {renderPreviousTasks()}
+        
+            <p>Current task:</p>
             <Form schema={schema as any}
                 uiSchema={uiSchema}
                 formData={data}
