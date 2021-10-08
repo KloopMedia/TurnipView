@@ -127,10 +127,7 @@ function App() {
     return (
         <div style={{ padding: 4 }}>
             {richText && renderTextViewer()}
-            <p>Previous tasks:</p>
             {renderPreviousTasks()}
-        
-            <p>Current task:</p>
             <Form schema={schema as any}
                 uiSchema={uiSchema}
                 formData={data}
