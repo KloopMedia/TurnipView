@@ -11,7 +11,9 @@ window.Android = window.Android || {};
 const CustomFileWidget = (props: any) => {
     const { schema, uiSchema, id, formContext, disabled, onChange, value } = props;
     const privateUpload = uiSchema["ui:options"] ? uiSchema["ui:options"].private : false
+    const parsedId = id.replace('root_', '');
     const [files, setFiles] = useState<fileParams[] | undefined>()
+    const [loadingFiles, setLoadingFiles] = useState<fileParams[] | undefined>([])
 
     useEffect(() => {
         if (formContext) {
@@ -21,6 +23,7 @@ const CustomFileWidget = (props: any) => {
                 let filesData = formContext[id]
                 console.log("filesData", JSON.stringify(filesData))
                 setFiles(filesData)
+                setLoadingFiles(filesData)
             }
         }
     }, [id, formContext])
@@ -30,7 +33,7 @@ const CustomFileWidget = (props: any) => {
         if (value) {
             let parsed = JSON.parse(value)
             let newFiles = Object.keys(parsed).map(filename => {
-                return { fileName: filename, downloadUri: parsed[filename].url, storagePath: parsed[filename].storagePath, progress: 100 }
+                return { fileName: filename, storagePath: parsed[filename].storagePath, progress: 100 }
             })
             setFiles(newFiles)
         }
@@ -39,30 +42,28 @@ const CustomFileWidget = (props: any) => {
 
     // Return value to Form
     useEffect(() => {
-        if (files && files?.length > 0) {
+        if (loadingFiles && loadingFiles?.length > 0) {
             let filesObj: any = {}
-            files.forEach(file => {
-                if (file.downloadUri) {
-                    filesObj[file.fileName] = { url: file.downloadUri, storagePath: file.storagePath }
-                }
-                else {
-                    filesObj[file.fileName] = { url: "", storagePath: "" }
-                }
+            loadingFiles.forEach(file => {
+                filesObj[file.fileName] = file.storagePath
             })
-            let stringify = JSON.stringify(filesObj)
+            const parsed = JSON.parse(value);
+            const allFiles = { ...parsed, ...filesObj };
+            let stringify = JSON.stringify(allFiles)
             onChange(stringify)
         }
-    }, [files, onChange])
+    }, [loadingFiles])
 
     const handleVideoClick = () => {
         if ("Android" in window) {
-            window.Android.pickVideos(id, privateUpload);
+            console.log("PARSED ID", parsedId)
+            window.Android.pickVideos(parsedId, privateUpload);
         }
     }
 
     const handlePhotoClick = () => {
         if ("Android" in window) {
-            window.Android.pickPhotos(id, privateUpload);
+            window.Android.pickPhotos(parsedId, privateUpload);
         }
     };
 
@@ -88,7 +89,7 @@ const CustomFileWidget = (props: any) => {
         }
     }
 
-    const ControlButtons = (props: {progress: number, url: string, name: string, path: string}) => {
+    const ControlButtons = (props: { progress: number, url: string, name: string, path: string }) => {
         const { progress, name, url, path } = props;
 
         if (progress < 100) {
@@ -133,26 +134,19 @@ const CustomFileWidget = (props: any) => {
 
 
             {files && files.map((file: any, i: number) => {
-                if (file) {
-                    const progress = typeof file.progress === "string" ? parseInt(file.progress) : file.progress;
-                    const name = file.fileName;
-                    const path = file.storagePath ?? "";
-                    const url = file.downloadUri ?? "";
+                const progress = typeof file.progress === "string" ? parseInt(file.progress) : file.progress;
+                const name = file.fileName;
+                const path = file.storagePath ?? "";
 
-                    return (
-                        <div key={`${name}_${i}`} style={{ paddingTop: 10 }}>
-                            <Stack spacing={1} direction="row" alignItems="center">
-                                <Typography noWrap >{name}</Typography>
-                                <ControlButtons name={name} url={url} path={path}  progress={progress} />
-                                {/* {file.progress == 100 && <a className="text-success" href={file.downloadUri} style={{paddingLeft: 10}}>File Saved</a>} */}
-                            </Stack>
-                            {progress < 100 && <LinearProgressWithLabel value={progress ?? 0} />}
-                        </div>
-                    )
-                }
-                else {
-                    return null
-                }
+                return (
+                    <div key={`${name}_${i}`} style={{ paddingTop: 10 }}>
+                        <Stack spacing={1} direction="row" alignItems="center">
+                            <Typography noWrap >{name}</Typography>
+                            <ControlButtons name={name} url={""} path={path} progress={progress} />
+                        </Stack>
+                        {progress < 100 && <LinearProgressWithLabel value={progress ?? 0} />}
+                    </div>
+                )
             })}
         </div>
     )
