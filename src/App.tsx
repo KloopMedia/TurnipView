@@ -83,6 +83,7 @@ function App() {
     const handleChange = (e) => {
         setData(e.formData)
         let stringData = JSON.stringify(e.formData)
+        console.log("ON CHANGE", stringData)
         if ("Android" in window) {
             window.Android.onChange(stringData);
         }
@@ -97,7 +98,6 @@ function App() {
     }
 
     const renderPreviousTasks = () => {
-        console.log("atai test", previousTasks)
         return previousTasks.map((task: { jsonSchema: string, uiSchema: string, responses: any }, i: number) => {
             const parsedJson = task.jsonSchema
             const parsedUi = task.uiSchema
