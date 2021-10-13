@@ -12,67 +12,67 @@ const CustomFileWidget = (props: any) => {
     const { schema, uiSchema, id, formContext, disabled, onChange, value } = props;
     const privateUpload = uiSchema["ui:options"] ? uiSchema["ui:options"].private : false
     const parsedId = id.replace('root_', '');
-    const [files, setFiles] = useState<fileParams[]>([])
-    const [loadingFiles, setLoadingFiles] = useState<fileParams[]>([])
+    const [files, setFiles] = useState<any>({})
+    const [loadingFiles, setLoadingFiles] = useState<any>({})
+
+    console.log("FORM PROPS", JSON.stringify(props))
+    console.log("VALUE", value)
 
     useEffect(() => {
         if (formContext) {
             console.log("formContext", JSON.stringify(formContext))
-            if (formContext.hasOwnProperty(id)) {
-                console.log("SAME ID")
-                let filesData = formContext[id]
+            if (formContext.hasOwnProperty(parsedId)) {
+                let filesData = formContext[parsedId]
                 console.log("filesData", JSON.stringify(filesData))
-                // setFiles(filesData)
-                // setLoadingFiles(filesData)
+
+                setFiles(filesData)
+                setLoadingFiles(filesData)
             }
         }
     }, [id, formContext])
 
     useEffect(() => {
-        console.log("value", value)
         if (value) {
-            let parsed = JSON.parse(value)
-            let newFiles = Object.keys(parsed).map(filename => {
-                return { fileName: filename, storagePath: parsed[filename], progress: 100 }
+            console.log("value useEffect", value)
+            Object.keys(value).forEach(filename => {
+                const path = value[filename]
+                setFiles((prevState: any) => ({
+                    ...prevState,
+                    [filename]: { storagePath: path, isFinished: true }
+                }))
             })
-            console.log("NEW FILES", JSON.stringify(newFiles))
-            setFiles(newFiles)
         }
     }, [value])
 
 
     // Return value to Form
     useEffect(() => {
-        if (loadingFiles && loadingFiles?.length > 0) {
-            let filesObj: any = {}
-            loadingFiles.forEach(file => {
-                filesObj[file.fileName] = file.storagePath
+        if (Object.keys(loadingFiles).length > 0) {
+            const finishedUpload: any = {}
+            Object.keys(loadingFiles).forEach(filename => {
+                if (loadingFiles[filename].isFinished && loadingFiles[filename].workTag === "TAG_UPLOAD") {
+                    finishedUpload[filename] = loadingFiles[filename].storagePath
+                }
             })
-            if (value) {
-                console.log("Parsed Value", value)
-                const parsed = JSON.parse(value);
-                const allFiles = { ...parsed, ...filesObj };
-                let stringify = JSON.stringify(allFiles)
-                console.log("STRING ALL FILES", stringify)
-                onChange(stringify)
-            } else {
-                let stringify = JSON.stringify(filesObj)
-                console.log("STRING ALL FILES ELSE", stringify)
-                onChange(stringify)
-            }
+            console.log("VALUE loading", value)
+            let stringify = ""
+            const allFiles = { ...value, ...finishedUpload };
+            stringify = JSON.stringify(allFiles)
+            console.log("VALUE STRING", stringify)
+            onChange(allFiles)
         }
     }, [loadingFiles])
 
     const handleVideoClick = () => {
         if ("Android" in window) {
             console.log("PARSED ID", parsedId)
-            window.Android.pickVideos(id, privateUpload);
+            window.Android.pickVideos(parsedId, privateUpload);
         }
     }
 
     const handlePhotoClick = () => {
         if ("Android" in window) {
-            window.Android.pickPhotos(id, privateUpload);
+            window.Android.pickPhotos(parsedId, privateUpload);
         }
     };
 
@@ -91,33 +91,30 @@ const CustomFileWidget = (props: any) => {
         }
     }
 
-    const previewFile = (url: string) => {
+    const previewFile = (storagePath: string) => {
         if ("Android" in window) {
-            console.log("Preview File", url)
-            window.Android.previewFile(url)
+            console.log("Preview File", storagePath)
+            window.Android.previewFile(storagePath)
         }
     }
 
-    const ControlButtons = (props: { progress: number, name: string, path: string }) => {
-        const { progress, name, path } = props;
+    const ControlButtons = (props: { isFinished: boolean, name: string, path: string }) => {
+        const { isFinished, name, path } = props;
 
-        if (progress < 100) {
+        if (isFinished) {
+            return (
+                <>
+                    <Button variant="text" size="small" onClick={() => removeFile(name, path)}>Remove</Button>
+                    <Button variant="text" size="small" onClick={() => previewFile(path)}>Preview</Button>
+                </>
+            )
+        }
+        else {
             return (
                 <Button variant="text" size="small" onClick={() => cancelWork(name)}>Cancel</Button>
             )
         }
-        if (progress === 100) {
-            return (
-                <>
-                    <Button variant="text" size="small" onClick={() => removeFile(name, path)}>Remove</Button>
-                    <Button variant="text" size="small" onClick={() => previewFile("")}>Preview</Button>
-                </>
-            )
-        }
-        return null;
     }
-
-    console.log("FILES", JSON.stringify(files))
 
     return (
         <div>
@@ -140,19 +137,17 @@ const CustomFileWidget = (props: any) => {
                 </CustomButton>
             </Stack>
 
-            {files.map(f => <p>{f.fileName}</p>)}
 
-            {files.map((file: any, i: number) => {
-                const progress = typeof file.progress === "string" ? parseInt(file.progress) : file.progress;
-                const name = file.fileName;
-                const path = file.storagePath ?? "";
-                const isFinished = file.isFinished ? file.isFinished : false
+            {Object.keys(files).map((filename: any, i: number) => {
+                const progress = typeof files[filename].progress === "string" ? parseInt(files[filename].progress) : files[filename].progress;
+                const path = files[filename].storagePath
+                const isFinished = files[filename].isFinished
 
                 return (
-                    <div key={`${name}_${i}`} style={{ paddingTop: 10 }}>
+                    <div key={`${filename}_${i}`} style={{ paddingTop: 10 }}>
                         <Stack spacing={1} direction="row" alignItems="center">
-                            <Typography noWrap >{name}</Typography>
-                            <ControlButtons name={name} path={path} progress={progress} />
+                            <Typography noWrap >{filename}</Typography>
+                            <ControlButtons name={filename} path={path} isFinished={isFinished} />
                         </Stack>
                         {!isFinished && <LinearProgressWithLabel value={progress ?? 0} />}
                     </div>

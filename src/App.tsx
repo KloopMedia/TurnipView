@@ -42,13 +42,13 @@ function App() {
         )
         // @ts-ignore
         window.addEventListener('android_data_event', (e: any) => {
-            console.log("JS FORMDATA", JSON.stringify(e.detail))
+            console.log("JS FORMDATA", e.detail)
             setData(JSON.parse(e.detail))
         }
         )
         // @ts-ignore
         window.addEventListener('android_file_event', (e: any) => {
-            console.log("FILEDATA", JSON.stringify(e.detail))
+            console.log("FILEDATA", e.detail)
             setFileData(JSON.parse(e.detail))
         }
         )
@@ -120,7 +120,7 @@ function App() {
         console.log("TEXT VIEWER", richText)
         return <TextViewer data={richText} />
     }
-
+    console.log("FORM DATA", data)
     return (
         <div style={{ padding: 4 }}>
             {richText && renderTextViewer()}
