@@ -53,8 +53,8 @@ function App() {
         }
         )
         window.addEventListener('android_rich_text_event', (e: any) => {
-            console.log("RICH TEXT", JSON.stringify(e.detail))
-            setRichText(e.detail)
+            console.log("RICH TEXT", e.detail)
+            setRichText(e.detail.replace("{\"rich_text\":", "").replace("\"", "").replace("\"}", ""))
         }
         )
         window.addEventListener('android_previous_tasks_event', (e: any) => {
