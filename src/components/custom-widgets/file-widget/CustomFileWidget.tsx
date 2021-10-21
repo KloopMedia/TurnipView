@@ -50,6 +50,7 @@ const CustomFileWidget = (props: any) => {
     // Return value to Form
     useEffect(() => {
         if (Object.keys(loadingFiles).length > 0) {
+            console.log("Loading Files: ", loadingFiles)
             const finishedUpload: any = {}
             Object.keys(loadingFiles).forEach(filename => {
                 if (loadingFiles[filename].isFinished && loadingFiles[filename].workTag === "TAG_UPLOAD") {
@@ -98,16 +99,17 @@ const CustomFileWidget = (props: any) => {
             setFiles(newFiles)
         }
 
-        // if (filename in parsed) {
-        //     delete parsed[filename]
-        //     const stringify = JSON.stringify(parsed)
-        //     console.log("DELETE LOG AFTER: ", stringify)
-        //     props.onChange(stringify)
-        // }
+        if (filename in parsed) {
+            console.log("DELETE LOG PARSED: ", JSON.stringify(parsed))
+            delete parsed[filename]
+            const stringify = JSON.stringify(parsed)
+            console.log("DELETE LOG AFTER: ", stringify)
+            setParsedValue(parsed)
+            props.onChange(parsed)
+        }
 
-        console.log("DELETE LOG", JSON.stringify(newFiles))
-        console.log("DELETE LOG", JSON.stringify(loadedFiles))
-
+        console.log("DELETE LOG newfiles", JSON.stringify(newFiles))
+        console.log("DELETE LOG loading", JSON.stringify(loadedFiles))
     }
 
     const cancelWork = (fileName: string) => {
