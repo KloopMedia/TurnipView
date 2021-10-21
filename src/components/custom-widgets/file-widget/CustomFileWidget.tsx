@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, {useEffect, useState} from 'react'
 import LinearProgressWithLabel from './LinearProgressWithLabel'
-import { Typography, Button, Stack } from "@mui/material";
+import {Typography, Button, Stack} from "@mui/material";
 import CustomButton from '../../CustomButton'
 
 
@@ -9,14 +9,15 @@ type fileParams = { fileName: string, progress: number, downloadUri?: string, st
 window.Android = window.Android || {};
 
 const CustomFileWidget = (props: any) => {
-    const { schema, uiSchema, id, formContext, disabled, onChange, value } = props;
+    const {schema, uiSchema, id, formContext, disabled, onChange, value} = props;
     const privateUpload = uiSchema["ui:options"] ? uiSchema["ui:options"].private : false
     const parsedId = id.replace('root_', '');
     const [files, setFiles] = useState<any>({})
     const [loadingFiles, setLoadingFiles] = useState<any>({})
+    const [parsedValue, setParsedValue] = useState<any>({})
 
     console.log("FORM PROPS", JSON.stringify(props))
-    console.log("VALUE", value)
+    console.log("VALUE", JSON.stringify(value))
 
     useEffect(() => {
         if (formContext) {
@@ -34,11 +35,12 @@ const CustomFileWidget = (props: any) => {
     useEffect(() => {
         if (value) {
             console.log("value useEffect", value)
+            setParsedValue(value)
             Object.keys(value).forEach(filename => {
                 const path = value[filename]
                 setFiles((prevState: any) => ({
                     ...prevState,
-                    [filename]: { storagePath: path, isFinished: true }
+                    [filename]: {storagePath: path, isFinished: true}
                 }))
             })
         }
@@ -54,10 +56,8 @@ const CustomFileWidget = (props: any) => {
                     finishedUpload[filename] = loadingFiles[filename].storagePath
                 }
             })
-            console.log("VALUE loading", value)
-            let stringify = ""
-            const allFiles = { ...value, ...finishedUpload };
-            stringify = JSON.stringify(allFiles)
+            const allFiles = {...value, ...finishedUpload};
+            const stringify = JSON.stringify(allFiles)
             console.log("VALUE STRING", stringify)
             onChange(allFiles)
         }
@@ -76,12 +76,38 @@ const CustomFileWidget = (props: any) => {
         }
     };
 
-    const removeFile = (fileName: string, storagePath: string) => {
-        if ("Android" in window) {
-            const filePath = storagePath + fileName
-            console.log("Delete File", fileName, storagePath)
-            window.Android.deleteFile(filePath)
+    const removeFile = (filename: string, storagePath: string) => {
+        // if ("Android" in window) {
+        //     const filePath = storagePath + fileName
+        //     console.log("Delete File", fileName, storagePath)
+        //     window.Android.deleteFile(filePath)
+        // }
+
+        const parsed = parsedValue
+        console.log("DELETE LOG VALUE: ", JSON.stringify(value), filename)
+        const newFiles = {...files}
+
+        const loadedFiles = {...loadingFiles}
+        if (filename in loadedFiles) {
+            delete loadedFiles[filename]
+            setLoadingFiles(loadedFiles)
         }
+
+        if (filename in newFiles) {
+            delete newFiles[filename]
+            setFiles(newFiles)
+        }
+
+        // if (filename in parsed) {
+        //     delete parsed[filename]
+        //     const stringify = JSON.stringify(parsed)
+        //     console.log("DELETE LOG AFTER: ", stringify)
+        //     props.onChange(stringify)
+        // }
+
+        console.log("DELETE LOG", JSON.stringify(newFiles))
+        console.log("DELETE LOG", JSON.stringify(loadedFiles))
+
     }
 
     const cancelWork = (fileName: string) => {
@@ -99,7 +125,7 @@ const CustomFileWidget = (props: any) => {
     }
 
     const ControlButtons = (props: { isFinished: boolean, name: string, path: string }) => {
-        const { isFinished, name, path } = props;
+        const {isFinished, name, path} = props;
 
         if (isFinished) {
             return (
@@ -108,8 +134,7 @@ const CustomFileWidget = (props: any) => {
                     <Button variant="text" size="small" onClick={() => previewFile(path)}>Preview</Button>
                 </>
             )
-        }
-        else {
+        } else {
             return (
                 <Button variant="text" size="small" onClick={() => cancelWork(name)}>Cancel</Button>
             )
@@ -119,7 +144,7 @@ const CustomFileWidget = (props: any) => {
     return (
         <div>
             <label className={"form-label"}>{schema?.title}</label>
-            <br />
+            <br/>
             <Stack spacing={1} direction="row">
                 <CustomButton
                     disabled={disabled}
@@ -142,14 +167,15 @@ const CustomFileWidget = (props: any) => {
                 const progress = typeof files[filename].progress === "string" ? parseInt(files[filename].progress) : files[filename].progress;
                 const path = files[filename].storagePath
                 const isFinished = files[filename].isFinished
+                console.log("FILES: ", JSON.stringify(files))
 
                 return (
-                    <div key={`${filename}_${i}`} style={{ paddingTop: 10 }}>
+                    <div key={`${filename}_${i}`} style={{paddingTop: 10}}>
                         <Stack spacing={1} direction="row" alignItems="center">
-                            <Typography noWrap >{filename}</Typography>
-                            <ControlButtons name={filename} path={path} isFinished={isFinished} />
+                            <Typography noWrap>{filename}</Typography>
+                            <ControlButtons name={filename} path={path} isFinished={isFinished}/>
                         </Stack>
-                        {!isFinished && <LinearProgressWithLabel value={progress ?? 0} />}
+                        {!isFinished && <LinearProgressWithLabel value={progress ?? 0}/>}
                     </div>
                 )
             })}
