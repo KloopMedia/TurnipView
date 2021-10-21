@@ -1,25 +1,25 @@
 {
   "files": {
     "main.css": "/TurnipView/static/css/main.1635e87c.chunk.css",
-    "main.js": "/TurnipView/static/js/main.0624351b.chunk.js",
-    "main.js.map": "/TurnipView/static/js/main.0624351b.chunk.js.map",
+    "main.js": "/TurnipView/static/js/main.0aff785d.chunk.js",
+    "main.js.map": "/TurnipView/static/js/main.0aff785d.chunk.js.map",
     "runtime-main.js": "/TurnipView/static/js/runtime-main.8fa477cc.js",
     "runtime-main.js.map": "/TurnipView/static/js/runtime-main.8fa477cc.js.map",
     "static/css/2.d45d6843.chunk.css": "/TurnipView/static/css/2.d45d6843.chunk.css",
-    "static/js/2.faec536c.chunk.js": "/TurnipView/static/js/2.faec536c.chunk.js",
-    "static/js/2.faec536c.chunk.js.map": "/TurnipView/static/js/2.faec536c.chunk.js.map",
+    "static/js/2.4f1a29f9.chunk.js": "/TurnipView/static/js/2.4f1a29f9.chunk.js",
+    "static/js/2.4f1a29f9.chunk.js.map": "/TurnipView/static/js/2.4f1a29f9.chunk.js.map",
     "static/js/3.3e04079d.chunk.js": "/TurnipView/static/js/3.3e04079d.chunk.js",
     "static/js/3.3e04079d.chunk.js.map": "/TurnipView/static/js/3.3e04079d.chunk.js.map",
     "index.html": "/TurnipView/index.html",
     "static/css/2.d45d6843.chunk.css.map": "/TurnipView/static/css/2.d45d6843.chunk.css.map",
     "static/css/main.1635e87c.chunk.css.map": "/TurnipView/static/css/main.1635e87c.chunk.css.map",
-    "static/js/2.faec536c.chunk.js.LICENSE.txt": "/TurnipView/static/js/2.faec536c.chunk.js.LICENSE.txt"
+    "static/js/2.4f1a29f9.chunk.js.LICENSE.txt": "/TurnipView/static/js/2.4f1a29f9.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.8fa477cc.js",
     "static/css/2.d45d6843.chunk.css",
-    "static/js/2.faec536c.chunk.js",
+    "static/js/2.4f1a29f9.chunk.js",
     "static/css/main.1635e87c.chunk.css",
-    "static/js/main.0624351b.chunk.js"
+    "static/js/main.0aff785d.chunk.js"
   ]
 }
