@@ -27,7 +27,18 @@ const CustomFileWidget = (props: any) => {
                 console.log("filesData", JSON.stringify(filesData))
 
                 setFiles(filesData)
-                setLoadingFiles(filesData)
+                // setLoadingFiles(filesData)
+                const uploaded:any = {}
+                Object.keys(filesData).forEach(filename => {
+                    if (filesData[filename].isFinished) {
+                        uploaded[filename] = filesData[filename].storagePath
+                    }
+                })
+                if (Object.keys(uploaded).length > 0) {
+                    const allFiles = {...value, ...uploaded}
+                    console.log("UPLOADED FILES", JSON.stringify(allFiles))
+                    props.onChange(allFiles)
+                }
             }
         }
     }, [id, formContext])
@@ -48,21 +59,21 @@ const CustomFileWidget = (props: any) => {
 
 
     // Return value to Form
-    useEffect(() => {
-        if (Object.keys(loadingFiles).length > 0) {
-            console.log("Loading Files: ", loadingFiles)
-            const finishedUpload: any = {}
-            Object.keys(loadingFiles).forEach(filename => {
-                if (loadingFiles[filename].isFinished && loadingFiles[filename].workTag === "TAG_UPLOAD") {
-                    finishedUpload[filename] = loadingFiles[filename].storagePath
-                }
-            })
-            const allFiles = {...value, ...finishedUpload};
-            const stringify = JSON.stringify(allFiles)
-            console.log("VALUE STRING", stringify)
-            onChange(allFiles)
-        }
-    }, [loadingFiles])
+    // useEffect(() => {
+    //     if (Object.keys(loadingFiles).length > 0) {
+    //         console.log("Loading Files: ", loadingFiles)
+    //         const finishedUpload: any = {}
+    //         Object.keys(loadingFiles).forEach(filename => {
+    //             if (loadingFiles[filename].isFinished && loadingFiles[filename].workTag === "TAG_UPLOAD") {
+    //                 finishedUpload[filename] = loadingFiles[filename].storagePath
+    //             }
+    //         })
+    //         const allFiles = {...value, ...finishedUpload};
+    //         const stringify = JSON.stringify(allFiles)
+    //         console.log("VALUE STRING", stringify)
+    //         onChange(allFiles)
+    //     }
+    // }, [loadingFiles])
 
     const handleVideoClick = () => {
         if ("Android" in window) {

@@ -43,7 +43,11 @@ function App() {
         // @ts-ignore
         window.addEventListener('android_data_event', (e: any) => {
             console.log("JS FORMDATA", e.detail)
-            setData(JSON.parse(e.detail))
+            const d = JSON.parse(e.detail)
+            if (d && Object.keys(d).length > 0) {
+                setData(d)
+            }
+
         }
         )
         // @ts-ignore
@@ -81,8 +85,9 @@ function App() {
 
     // @ts-ignore
     const handleChange = (e) => {
-        setData(e.formData)
-        let stringData = JSON.stringify(e.formData)
+        const newData = {...data, ...e.formData}
+        setData(newData)
+        const stringData = JSON.stringify(newData)
         console.log("ON CHANGE", stringData)
         if ("Android" in window) {
             window.Android.onChange(stringData);
@@ -90,8 +95,9 @@ function App() {
     };
 
     const handleSubmit = (e: any) => {
-        setData(e.formData)
-        let stringData = JSON.stringify(e.formData)
+        const newData = {...data, ...e.formData}
+        setData(newData)
+        let stringData = JSON.stringify(newData)
         if ("Android" in window) {
             window.Android.onFormSubmit(stringData);
         }
