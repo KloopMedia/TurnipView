@@ -1,1 +1,74 @@
-{"type":"object","properties":{"files":{"title":"Files","type":"string", "description":  "ATAIA WAS BHEHE"},"newInput1":{"title":"New Input 1","type":"string","description":"asd"}},"dependencies":{},"required":[],"title":"Files Test","description":"Stage for testing Files"}
+{
+    "type": "object",
+    "title": "Форма регистрации / Каттоо формасы",
+    "properties": {
+        "surname": {
+            "title": "Фамилия / Фамилия",
+            "type": "string"
+        },
+        "name": {
+            "title": "Имя / Аты",
+            "type": "string"
+        },
+        "middle_name": {
+            "title": "Отчество / Атасынын аты",
+            "type": "string"
+        },
+        "document_number": {
+            "title": "Номер паспорта / Паспорттун номуру",
+            "type": "string",
+            "description": "(Пример AN/ID 1234567) / (Мисалы AN/ID 1234567)"
+        },
+        "issuing_authority": {
+            "title": "Орган выдачи / Берген мекеме",
+            "type": "string",
+            "description": "(Пример МКК 5053) / (Мисалы МКК 5053)"
+        },
+        "INN": {
+            "title": "ИНН (Персональный номер) / ИНН (Жеке номер)",
+            "type": "number"
+        },
+ "test": {
+            "title": "ИНН (Персональный номер) / ИНН (Жеке номер)",
+            "type": "string",
+"default": "atai"
+        },
+        "issue_date": {
+            "format": "date",
+            "title": "Дата выдачи / Берилген күнү",
+            "type": "string",
+            "description": "(Пример 13.01.2018) / (Мисалы 13.01.2018)"
+        },
+        "expiration_date": {
+            "format": "date",
+            "title": "Дата окончания срока действия / Мөөнөтү бүткөн күн",
+            "type": "string"
+        },
+        "front_side": {
+            "title": "Прикрепите фото лицевой стороны ID / ID картаңыздын негизги бетинин сүрөтүн тиркеңиз",
+            "type": "string"
+        },
+        "back_side": {
+            "title": "Прикрепите фото задней стороны ID / ID картаңыздын арткы бетинин сүрөтүн тиркеңиз",
+            "type": "string"
+        },
+        "badge_photo": {
+            "title": "Прикрепите свое фото формата 3x4 на удостоверение наблюдателя / Байкоочунун күбөлүгүнө коюла турган 3x4 өлчөмүндө сүрөтүңүздү тиркеңиз",
+            "type": "string"
+        }
+    },
+    "dependencies": {},
+    "required": [
+        "surname",
+        "name",
+        "document_number",
+        "issuing_authority",
+        "INN",
+        "issue_date",
+        "expiration_date",
+        "front_side",
+        "back_side",
+        "badge_photo"
+    ],
+    "description": "Пожалуйста заполните все свои данные точно так, как они указаны в вашем паспорте. Это нужно для перечисления вам денег через банк и для регистрации в ЦИКе. / Сураныч, сиз жеке маалыматтарыңызды паспортто көрсөтүлгөндөй толтуруңуз. Бул сизге банк аркылуу акча которуу жана БШКдан каттоодон өтүү үчүн керек."
+}

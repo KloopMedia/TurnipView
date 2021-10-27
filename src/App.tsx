@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import Form from '@rjsf/bootstrap-4'
 import CustomFileWidget from "./components/custom-widgets/file-widget/CustomFileWidget";
 import './App.css';
@@ -25,6 +25,7 @@ function App() {
     const [previousTasks, setPreviousTasks] = useState<any>([])
     const [richText, setRichText] = useState("")
     const [isComplete, setIsComplete] = useState(false)
+    const [allowChange, setAllowChange] = useState(false)
 
     const widgets = {
         customfile: CustomFileWidget
@@ -33,38 +34,38 @@ function App() {
     useEffect(() => {
         // @ts-ignore
         window.addEventListener('android_schema_event', (e: any) => {
-            console.log("SCHEMA", JSON.stringify(e.detail))
-            const stageData = JSON.parse(e.detail)
-            setSchema(stageData.jsonSchema)
-            setUiSchema(stageData.uiSchema)
-            setIsComplete(stageData.isComplete)
-        }
+                console.log("SCHEMA", JSON.stringify(e.detail))
+                const stageData = JSON.parse(e.detail)
+                setSchema(stageData.jsonSchema)
+                setUiSchema(stageData.uiSchema)
+                setIsComplete(stageData.isComplete)
+            }
         )
         // @ts-ignore
         window.addEventListener('android_data_event', (e: any) => {
-            console.log("JS FORMDATA", e.detail)
-            const d = JSON.parse(e.detail)
-            if (d && Object.keys(d).length > 0) {
-                setData(d)
-            }
+                console.log("JS FORMDATA", e.detail)
+                const d = JSON.parse(e.detail)
+                if (d && Object.keys(d).length > 0) {
+                    setData(d)
+                }
 
-        }
+            }
         )
         // @ts-ignore
         window.addEventListener('android_file_event', (e: any) => {
-            console.log("FILEDATA", e.detail)
-            setFileData(JSON.parse(e.detail))
-        }
+                console.log("FILEDATA", e.detail)
+                setFileData(JSON.parse(e.detail))
+            }
         )
         window.addEventListener('android_rich_text_event', (e: any) => {
-            console.log("RICH TEXT", e.detail)
-            setRichText(e.detail.replace("{\"rich_text\":", "").replace("\"", "").replace("\"}", ""))
-        }
+                console.log("RICH TEXT", e.detail)
+                setRichText(e.detail.replace("{\"rich_text\":", "").replace("\"", "").replace("\"}", ""))
+            }
         )
         window.addEventListener('android_previous_tasks_event', (e: any) => {
-            console.log("PREVIOUS TASKS", JSON.stringify(e.detail))
-            setPreviousTasks(JSON.parse(e.detail))
-        }
+                console.log("PREVIOUS TASKS", JSON.stringify(e.detail))
+                setPreviousTasks(JSON.parse(e.detail))
+            }
         )
         window.Android.listenersReady();
         return () => {
@@ -85,19 +86,19 @@ function App() {
 
     // @ts-ignore
     const handleChange = (e) => {
-        const newData = {...data, ...e.formData}
-        setData(newData)
-        const stringData = JSON.stringify(newData)
+        setData(e.formData)
+        const stringData = JSON.stringify(e.formData)
         console.log("ON CHANGE", stringData)
-        if ("Android" in window) {
+        if (allowChange && "Android" in window) {
             window.Android.onChange(stringData);
+        } else {
+            setAllowChange(true)
         }
     };
 
     const handleSubmit = (e: any) => {
-        const newData = {...data, ...e.formData}
-        setData(newData)
-        let stringData = JSON.stringify(newData)
+        setData(e.formData)
+        let stringData = JSON.stringify(e.formData)
         if ("Android" in window) {
             window.Android.onFormSubmit(stringData);
         }
@@ -111,34 +112,34 @@ function App() {
             console.log("Prev Task", task)
 
             return (
-                <Form key={i} 
-                    schema={parsedJson as any}
-                    uiSchema={parsedUi as any}
-                    formData={parsedResponses}
-                    widgets={widgets}
-                    disabled={true}
-                >  </Form>
+                <Form key={i}
+                      schema={parsedJson as any}
+                      uiSchema={parsedUi as any}
+                      formData={parsedResponses}
+                      widgets={widgets}
+                      disabled={true}
+                > </Form>
             )
         })
     }
 
     const renderTextViewer = () => {
         console.log("TEXT VIEWER", richText)
-        return <TextViewer data={richText} />
+        return <TextViewer data={richText}/>
     }
     console.log("FORM DATA", data)
     return (
-        <div style={{ padding: 4 }}>
+        <div style={{padding: 4}}>
             {richText && renderTextViewer()}
             {renderPreviousTasks()}
             <Form schema={schema as any}
-                uiSchema={uiSchema}
-                formData={data}
-                widgets={widgets}
-                disabled={isComplete}
-                formContext={fileData}
-                onChange={handleChange}
-                onSubmit={handleSubmit}
+                  uiSchema={uiSchema}
+                  formData={data}
+                  widgets={widgets}
+                  disabled={isComplete}
+                  formContext={fileData}
+                  onChange={handleChange}
+                  onSubmit={handleSubmit}
             >
                 <CustomButton type={"submit"} disabled={isComplete}>Submit</CustomButton>
             </Form>

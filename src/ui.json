@@ -1,1 +1,39 @@
-{"files":{"ui:widget":"customfile"},"ui:order":["files","newInput1"]}
+{
+    "front_side": {
+        "ui:widget": "customfile",
+        "ui:options": {
+            "private": true
+        }
+    },
+    "back_side": {
+        "ui:widget": "customfile",
+        "ui:options": {
+            "private": true
+        }
+    },
+    "badge_photo": {
+        "ui:widget": "customfile",
+        "ui:options": {
+            "private": true
+        }
+    },
+    "ui:order": [
+        "surname",
+        "name",
+        "middle_name",
+        "document_number",
+        "issuing_authority",
+        "INN",
+        "issue_date",
+        "expiration_date",
+        "regions",
+        "front_side",
+        "back_side",
+        "badge_photo",
+"test"
+    ],
+    "INN": {
+        "ui:column": "2"
+    },
+    "newInput1": {}
+}
