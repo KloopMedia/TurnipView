@@ -85,16 +85,21 @@ function App() {
     }, []);
 
     // @ts-ignore
-    const handleChange = (e) => {
+    const handleChange = (e, v) => {
         setData(e.formData)
         const stringData = JSON.stringify(e.formData)
         console.log("ON CHANGE", stringData)
-        if (allowChange && "Android" in window) {
-            window.Android.onChange(stringData);
-        } else {
-            setAllowChange(true)
-        }
+        // if (allowChange && "Android" in window) {
+        //     window.Android.onChange(stringData);
+        // } else {
+        //     setAllowChange(true)
+        // }
     };
+
+    const handleBlur = () => {
+        const stringData = JSON.stringify(data)
+        window.Android.onChange(stringData);
+    }
 
     const handleSubmit = (e: any) => {
         setData(e.formData)
@@ -138,6 +143,7 @@ function App() {
                   widgets={widgets}
                   disabled={isComplete}
                   formContext={fileData}
+                  onBlur={handleBlur}
                   onChange={handleChange}
                   onSubmit={handleSubmit}
             >
