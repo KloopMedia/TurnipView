@@ -93,7 +93,7 @@ function App() {
     const handleBlur = () => {
         const stringData = JSON.stringify(data)
         console.log("ON BLUR", stringData)
-        window.Android.onChange(stringData);
+        window.Android.onBlur(stringData);
     }
 
     const handleSubmit = (e: any) => {
