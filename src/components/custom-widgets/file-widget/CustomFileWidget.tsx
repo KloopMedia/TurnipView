@@ -28,7 +28,7 @@ const CustomFileWidget = (props: any) => {
 
                 setFiles(filesData)
                 // setLoadingFiles(filesData)
-                const uploaded:any = {}
+                const uploaded: any = {}
                 Object.keys(filesData).forEach(filename => {
                     if (filesData[filename].isFinished) {
                         uploaded[filename] = filesData[filename].storagePath
@@ -88,7 +88,7 @@ const CustomFileWidget = (props: any) => {
         }
     };
 
-    const removeFile = (filename: string, storagePath: string) => {
+    const removeFile = async (filename: string, storagePath: string) => {
         // if ("Android" in window) {
         //     const filePath = storagePath + fileName
         //     console.log("Delete File", fileName, storagePath)
@@ -116,7 +116,8 @@ const CustomFileWidget = (props: any) => {
             const stringify = JSON.stringify(parsed)
             console.log("DELETE LOG AFTER: ", stringify)
             setParsedValue(parsed)
-            props.onChange(parsed)
+            await props.onChange(parsed)
+            _onBlur()
         }
 
         console.log("DELETE LOG newfiles", JSON.stringify(newFiles))
@@ -137,19 +138,31 @@ const CustomFileWidget = (props: any) => {
         }
     }
 
+    const _onBlur = () => props.onBlur(id, "");
+    const _onFocus = () => props.onFocus(id, "");
+
     const ControlButtons = (props: { isFinished: boolean, name: string, path: string }) => {
         const {isFinished, name, path} = props;
 
         if (isFinished) {
             return (
                 <>
-                    <Button variant="text" size="small" onClick={() => removeFile(name, path)}>Remove</Button>
-                    <Button variant="text" size="small" onClick={() => previewFile(path)}>Preview</Button>
+                    <Button variant="text" size="small"
+                            onClick={() => removeFile(name, path)}
+                            onBlur={_onBlur}
+                            onFocus={_onFocus}>Remove</Button>
+                    <Button variant="text" size="small"
+                            onClick={() => previewFile(path)}
+                            onBlur={_onBlur}
+                            onFocus={_onFocus}>Preview</Button>
                 </>
             )
         } else {
             return (
-                <Button variant="text" size="small" onClick={() => cancelWork(name)}>Cancel</Button>
+                <Button variant="text" size="small"
+                        onClick={() => cancelWork(name)}
+                        onBlur={_onBlur}
+                        onFocus={_onFocus}>Cancel</Button>
             )
         }
     }
@@ -163,6 +176,8 @@ const CustomFileWidget = (props: any) => {
                     disabled={disabled}
                     onClick={handlePhotoClick}
                     size="small"
+                    onBlur={_onBlur}
+                    onFocus={_onFocus}
                 >
                     Photo
                 </CustomButton>
@@ -170,6 +185,8 @@ const CustomFileWidget = (props: any) => {
                     disabled={disabled}
                     onClick={handleVideoClick}
                     size="small"
+                    onBlur={_onBlur}
+                    onFocus={_onFocus}
                 >
                     Video
                 </CustomButton>

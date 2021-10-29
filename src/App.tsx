@@ -25,7 +25,6 @@ function App() {
     const [previousTasks, setPreviousTasks] = useState<any>([])
     const [richText, setRichText] = useState("")
     const [isComplete, setIsComplete] = useState(false)
-    const [allowChange, setAllowChange] = useState(false)
 
     const widgets = {
         customfile: CustomFileWidget
@@ -89,15 +88,11 @@ function App() {
         setData(e.formData)
         const stringData = JSON.stringify(e.formData)
         console.log("ON CHANGE", stringData)
-        // if (allowChange && "Android" in window) {
-        //     window.Android.onChange(stringData);
-        // } else {
-        //     setAllowChange(true)
-        // }
     };
 
     const handleBlur = () => {
         const stringData = JSON.stringify(data)
+        console.log("ON BLUR", stringData)
         window.Android.onChange(stringData);
     }
 
