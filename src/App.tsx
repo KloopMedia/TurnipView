@@ -25,6 +25,7 @@ function App() {
     const [previousTasks, setPreviousTasks] = useState<any>([])
     const [richText, setRichText] = useState("")
     const [isComplete, setIsComplete] = useState(false)
+    const [allowChange, setAllowChange] = useState(false)
 
     const widgets = {
         customfile: CustomFileWidget
@@ -36,8 +37,13 @@ function App() {
                 console.log("SCHEMA", JSON.stringify(e.detail))
                 const stageData = JSON.parse(e.detail)
                 setSchema(stageData.jsonSchema)
+            console.log("ON CHANGE JSON")
                 setUiSchema(stageData.uiSchema)
+            console.log("ON CHANGE UI")
                 setIsComplete(stageData.isComplete)
+            console.log("ON CHANGE COMPLETE")
+                setAllowChange(true)
+            console.log("ON CHANGE ALLOW")
             }
         )
         // @ts-ignore
@@ -85,16 +91,14 @@ function App() {
 
     // @ts-ignore
     const handleChange = (e, v) => {
-        setData(e.formData)
-        const stringData = JSON.stringify(e.formData)
-        console.log("ON CHANGE", stringData)
+        console.log("ON CHANGE BEFORE IF")
+        if (allowChange) {
+            setData(e.formData)
+            const stringData = JSON.stringify(e.formData)
+            console.log("ON CHANGE", stringData)
+            window.Android.onChange(stringData);
+        }
     };
-
-    const handleBlur = () => {
-        const stringData = JSON.stringify(data)
-        console.log("ON BLUR", stringData)
-        window.Android.onBlur(stringData);
-    }
 
     const handleSubmit = (e: any) => {
         setData(e.formData)
@@ -138,7 +142,6 @@ function App() {
                   widgets={widgets}
                   disabled={isComplete}
                   formContext={fileData}
-                  onBlur={handleBlur}
                   onChange={handleChange}
                   onSubmit={handleSubmit}
             >
