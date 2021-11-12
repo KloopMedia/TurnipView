@@ -16,8 +16,8 @@ const CustomFileWidget = (props: any) => {
     const [loadingFiles, setLoadingFiles] = useState<any>({})
     const [parsedValue, setParsedValue] = useState<any>({})
 
-    console.log("FORM PROPS", JSON.stringify(props))
-    console.log("VALUE", JSON.stringify(value))
+    // console.log("FORM PROPS", JSON.stringify(props))
+    // console.log("VALUE", JSON.stringify(value))
 
     useEffect(() => {
         if (formContext) {
@@ -26,7 +26,7 @@ const CustomFileWidget = (props: any) => {
                 let filesData = formContext[parsedId]
                 console.log("filesData", JSON.stringify(filesData))
 
-                setFiles(filesData)
+                setFiles((prevState: any) => ({...prevState,...filesData}))
                 // setLoadingFiles(filesData)
                 const uploaded: any = {}
                 Object.keys(filesData).forEach(filename => {
@@ -35,8 +35,11 @@ const CustomFileWidget = (props: any) => {
                     }
                 })
                 if (Object.keys(uploaded).length > 0) {
-                    const allFiles = {...value, ...uploaded}
-                    console.log("UPLOADED FILES", JSON.stringify(allFiles))
+                    console.log("VALUE", typeof value, value)
+                    const parsed = value && typeof value === "string" ? JSON.parse(value.replace(/\\"/g, '\"')) : {}
+                    console.log("PARSED VALUE", parsed)
+                    const allFiles = JSON.stringify({...parsed, ...uploaded}).replace(/\"/g, '\\"')
+                    console.log("UPLOADED FILES", typeof allFiles, allFiles)
                     props.onChange(allFiles)
                 }
             }
@@ -46,14 +49,14 @@ const CustomFileWidget = (props: any) => {
     useEffect(() => {
         if (value) {
             console.log("value useEffect", value)
-            setParsedValue(value)
-            Object.keys(value).forEach(filename => {
-                const path = value[filename]
-                setFiles((prevState: any) => ({
-                    ...prevState,
-                    [filename]: {storagePath: path, isFinished: true}
-                }))
+            const parsed: any = value && typeof value === "string" ? JSON.parse(value.replace(/\\"/g, '\"')) : {}
+            setParsedValue(parsed)
+            let f:any = {}
+            Object.keys(parsed).forEach(filename => {
+                const path = parsed[filename]
+                f[filename] = {storagePath: path, isFinished: true}
             })
+            setFiles(f)
         }
     }, [value])
 
@@ -96,7 +99,6 @@ const CustomFileWidget = (props: any) => {
         // }
 
         const parsed = parsedValue
-        console.log("DELETE LOG VALUE: ", JSON.stringify(value), filename)
         const newFiles = {...files}
 
         const loadedFiles = {...loadingFiles}

@@ -37,22 +37,23 @@ function App() {
                 console.log("SCHEMA", JSON.stringify(e.detail))
                 const stageData = JSON.parse(e.detail)
                 setSchema(stageData.jsonSchema)
-            console.log("ON CHANGE JSON")
+                console.log("ON CHANGE JSON")
                 setUiSchema(stageData.uiSchema)
-            console.log("ON CHANGE UI")
+                console.log("ON CHANGE UI")
                 setIsComplete(stageData.isComplete)
-            console.log("ON CHANGE COMPLETE")
+                console.log("ON CHANGE COMPLETE")
                 setAllowChange(true)
-            console.log("ON CHANGE ALLOW")
+                console.log("ON CHANGE ALLOW")
             }
         )
         // @ts-ignore
         window.addEventListener('android_data_event', (e: any) => {
                 console.log("JS FORMDATA", e.detail)
-                const d = JSON.parse(e.detail)
-                if (d && Object.keys(d).length > 0) {
-                    setData(d)
-                }
+                const s = e.detail //JSON.stringify(e.detail)
+                const d = JSON.parse(s)
+                console.log("TYPE OF", typeof d)
+                setData(d)
+
 
             }
         )
