@@ -3,9 +3,6 @@ import LinearProgressWithLabel from './LinearProgressWithLabel'
 import {Typography, Button, Stack} from "@mui/material";
 import CustomButton from '../../CustomButton'
 
-
-type fileParams = { fileName: string, progress: number, downloadUri?: string, storagePath?: string }
-
 window.Android = window.Android || {};
 
 const CustomFileWidget = (props: any) => {
@@ -13,21 +10,16 @@ const CustomFileWidget = (props: any) => {
     const privateUpload = uiSchema["ui:options"] ? uiSchema["ui:options"].private : false
     const parsedId = id.replace('root_', '');
     const [files, setFiles] = useState<any>({})
-    const [loadingFiles, setLoadingFiles] = useState<any>({})
     const [parsedValue, setParsedValue] = useState<any>({})
 
-    // console.log("FORM PROPS", JSON.stringify(props))
-    // console.log("VALUE", JSON.stringify(value))
 
     useEffect(() => {
         if (formContext) {
-            console.log("formContext", JSON.stringify(formContext))
             if (formContext.hasOwnProperty(parsedId)) {
-                let filesData = formContext[parsedId]
-                console.log("filesData", JSON.stringify(filesData))
+                const filesData = formContext[parsedId]
 
                 setFiles((prevState: any) => ({...prevState,...filesData}))
-                // setLoadingFiles(filesData)
+
                 const uploaded: any = {}
                 Object.keys(filesData).forEach(filename => {
                     if (filesData[filename].isFinished) {
@@ -35,11 +27,8 @@ const CustomFileWidget = (props: any) => {
                     }
                 })
                 if (Object.keys(uploaded).length > 0) {
-                    console.log("VALUE", typeof value, value)
-                    const parsed = value && typeof value === "string" ? JSON.parse(value.replace(/\\"/g, '\"')) : {}
-                    console.log("PARSED VALUE", parsed)
-                    const allFiles = JSON.stringify({...parsed, ...uploaded}).replace(/\"/g, '\\"')
-                    console.log("UPLOADED FILES", typeof allFiles, allFiles)
+                    const parsed = value && typeof value === "string" ? JSON.parse(value) : {}
+                    const allFiles = JSON.stringify({...parsed, ...uploaded})
                     props.onChange(allFiles)
                 }
             }
@@ -49,7 +38,7 @@ const CustomFileWidget = (props: any) => {
     useEffect(() => {
         if (value) {
             console.log("value useEffect", value)
-            const parsed: any = value && typeof value === "string" ? JSON.parse(value.replace(/\\"/g, '\"')) : {}
+            const parsed: any = value && typeof value === "string" ? JSON.parse(value) : {}
             setParsedValue(parsed)
             let f:any = {}
             Object.keys(parsed).forEach(filename => {
@@ -60,27 +49,8 @@ const CustomFileWidget = (props: any) => {
         }
     }, [value])
 
-
-    // Return value to Form
-    // useEffect(() => {
-    //     if (Object.keys(loadingFiles).length > 0) {
-    //         console.log("Loading Files: ", loadingFiles)
-    //         const finishedUpload: any = {}
-    //         Object.keys(loadingFiles).forEach(filename => {
-    //             if (loadingFiles[filename].isFinished && loadingFiles[filename].workTag === "TAG_UPLOAD") {
-    //                 finishedUpload[filename] = loadingFiles[filename].storagePath
-    //             }
-    //         })
-    //         const allFiles = {...value, ...finishedUpload};
-    //         const stringify = JSON.stringify(allFiles)
-    //         console.log("VALUE STRING", stringify)
-    //         onChange(allFiles)
-    //     }
-    // }, [loadingFiles])
-
     const handleVideoClick = () => {
         if ("Android" in window) {
-            console.log("PARSED ID", parsedId)
             window.Android.pickVideos(parsedId, privateUpload);
         }
     }
@@ -91,21 +61,9 @@ const CustomFileWidget = (props: any) => {
         }
     };
 
-    const removeFile = async (filename: string, storagePath: string) => {
-        // if ("Android" in window) {
-        //     const filePath = storagePath + fileName
-        //     console.log("Delete File", fileName, storagePath)
-        //     window.Android.deleteFile(filePath)
-        // }
-
+    const removeFile = async (filename: string) => {
         const parsed = parsedValue
         const newFiles = {...files}
-
-        const loadedFiles = {...loadingFiles}
-        if (filename in loadedFiles) {
-            delete loadedFiles[filename]
-            setLoadingFiles(loadedFiles)
-        }
 
         if (filename in newFiles) {
             delete newFiles[filename]
@@ -113,17 +71,11 @@ const CustomFileWidget = (props: any) => {
         }
 
         if (filename in parsed) {
-            console.log("DELETE LOG PARSED: ", JSON.stringify(parsed))
             delete parsed[filename]
-            const stringify = JSON.stringify(parsed)
-            console.log("DELETE LOG AFTER: ", stringify)
             setParsedValue(parsed)
-            await props.onChange(parsed)
+            await props.onChange(JSON.stringify(parsed))
             _onBlur()
         }
-
-        console.log("DELETE LOG newfiles", JSON.stringify(newFiles))
-        console.log("DELETE LOG loading", JSON.stringify(loadedFiles))
     }
 
     const cancelWork = (fileName: string) => {
@@ -150,13 +102,13 @@ const CustomFileWidget = (props: any) => {
             return (
                 <>
                     <Button variant="text" size="small"
-                            onClick={() => removeFile(name, path)}
+                            onClick={() => removeFile(name)}
                             onBlur={_onBlur}
-                            onFocus={_onFocus}>Remove</Button>
+                            onFocus={_onFocus}>Удалить</Button>
                     <Button variant="text" size="small"
                             onClick={() => previewFile(path)}
                             onBlur={_onBlur}
-                            onFocus={_onFocus}>Preview</Button>
+                            onFocus={_onFocus}>Посмотреть файл</Button>
                 </>
             )
         } else {
@@ -164,7 +116,7 @@ const CustomFileWidget = (props: any) => {
                 <Button variant="text" size="small"
                         onClick={() => cancelWork(name)}
                         onBlur={_onBlur}
-                        onFocus={_onFocus}>Cancel</Button>
+                        onFocus={_onFocus}>Отменить загрузку</Button>
             )
         }
     }
@@ -181,7 +133,7 @@ const CustomFileWidget = (props: any) => {
                     onBlur={_onBlur}
                     onFocus={_onFocus}
                 >
-                    Photo
+                    Фото
                 </CustomButton>
                 <CustomButton
                     disabled={disabled}
@@ -190,7 +142,7 @@ const CustomFileWidget = (props: any) => {
                     onBlur={_onBlur}
                     onFocus={_onFocus}
                 >
-                    Video
+                    Видео
                 </CustomButton>
             </Stack>
 
@@ -199,7 +151,7 @@ const CustomFileWidget = (props: any) => {
                 const progress = typeof files[filename].progress === "string" ? parseInt(files[filename].progress) : files[filename].progress;
                 const path = files[filename].storagePath
                 const isFinished = files[filename].isFinished
-                console.log("FILES: ", JSON.stringify(files))
+                const workTag : "TAG_COMPRESS" | "TAG_UPLOAD" = files[filename].workTag ?? "TAG_UPLOAD"
 
                 return (
                     <div key={`${filename}_${i}`} style={{paddingTop: 10}}>
@@ -207,7 +159,10 @@ const CustomFileWidget = (props: any) => {
                             <Typography noWrap>{filename}</Typography>
                             <ControlButtons name={filename} path={path} isFinished={isFinished}/>
                         </Stack>
-                        {!isFinished && <LinearProgressWithLabel value={progress ?? 0}/>}
+                        {!isFinished && <div>
+                            <Typography>{workTag === "TAG_COMPRESS" ? "Сжатие файла" : "Загрузка файла"}</Typography>
+                            <LinearProgressWithLabel value={progress ?? 0}/>
+                        </div>}
                     </div>
                 )
             })}

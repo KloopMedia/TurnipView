@@ -2,8 +2,6 @@ import React, {useEffect, useState} from 'react';
 import Form from '@rjsf/bootstrap-4'
 import CustomFileWidget from "./components/custom-widgets/file-widget/CustomFileWidget";
 import './App.css';
-import schemaJson from './schema.json'
-import schemaUi from './ui.json'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import CustomButton from './components/CustomButton'
 import TextViewer from './components/text-editor/TextViewer';
@@ -14,8 +12,6 @@ declare global {
     }
 }
 window.Android = window.Android || {};
-
-// const evt = new Event('android_event', {'bubbles':true, 'cancelable':false});
 
 function App() {
     const [schema, setSchema] = useState({});
@@ -32,45 +28,32 @@ function App() {
     };
 
     useEffect(() => {
-        // @ts-ignore
         window.addEventListener('android_schema_event', (e: any) => {
-                console.log("SCHEMA", JSON.stringify(e.detail))
-                const stageData = JSON.parse(e.detail)
+                const stageData = e.detail
                 setSchema(stageData.jsonSchema)
-                console.log("ON CHANGE JSON")
                 setUiSchema(stageData.uiSchema)
-                console.log("ON CHANGE UI")
                 setIsComplete(stageData.isComplete)
-                console.log("ON CHANGE COMPLETE")
                 setAllowChange(true)
-                console.log("ON CHANGE ALLOW")
             }
         )
-        // @ts-ignore
         window.addEventListener('android_data_event', (e: any) => {
-                console.log("JS FORMDATA", e.detail)
-                const s = e.detail //JSON.stringify(e.detail)
-                const d = JSON.parse(s)
-                console.log("TYPE OF", typeof d)
-                setData(d)
-
-
+                console.log("JS FORMDATA", JSON.stringify(e.detail))
+                setData(e.detail)
             }
         )
-        // @ts-ignore
         window.addEventListener('android_file_event', (e: any) => {
                 console.log("FILEDATA", e.detail)
-                setFileData(JSON.parse(e.detail))
+                setFileData(e.detail)
             }
         )
         window.addEventListener('android_rich_text_event', (e: any) => {
-                console.log("RICH TEXT", e.detail)
-                setRichText(e.detail.replace("{\"rich_text\":", "").replace("\"", "").replace("\"}", ""))
+                console.log("RICH TEXT", JSON.stringify(e.detail))
+                setRichText(e.detail.rich_text)
             }
         )
         window.addEventListener('android_previous_tasks_event', (e: any) => {
                 console.log("PREVIOUS TASKS", JSON.stringify(e.detail))
-                setPreviousTasks(JSON.parse(e.detail))
+                setPreviousTasks(e.detail)
             }
         )
         window.Android.listenersReady();
@@ -92,7 +75,6 @@ function App() {
 
     // @ts-ignore
     const handleChange = (e, v) => {
-        console.log("ON CHANGE BEFORE IF")
         if (allowChange) {
             setData(e.formData)
             const stringData = JSON.stringify(e.formData)
@@ -103,7 +85,7 @@ function App() {
 
     const handleSubmit = (e: any) => {
         setData(e.formData)
-        let stringData = JSON.stringify(e.formData)
+        const stringData = JSON.stringify(e.formData)
         if ("Android" in window) {
             window.Android.onFormSubmit(stringData);
         }
@@ -114,7 +96,6 @@ function App() {
             const parsedJson = task.jsonSchema
             const parsedUi = task.uiSchema
             const parsedResponses = task.responses
-            console.log("Prev Task", task)
 
             return (
                 <Form key={i}
@@ -129,13 +110,16 @@ function App() {
     }
 
     const renderTextViewer = () => {
-        console.log("TEXT VIEWER", richText)
-        return <TextViewer data={richText}/>
+        if (richText) {
+            return <TextViewer data={richText}/>
+        } else {
+            return null
+        }
     }
-    console.log("FORM DATA", data)
+
     return (
         <div style={{padding: 4}}>
-            {richText && renderTextViewer()}
+            {renderTextViewer()}
             {renderPreviousTasks()}
             <Form schema={schema as any}
                   uiSchema={uiSchema}
