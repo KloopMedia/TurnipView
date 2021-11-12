@@ -62,6 +62,10 @@ const CustomFileWidget = (props: any) => {
     };
 
     const removeFile = async (filename: string) => {
+        if ("Android" in window) {
+            window.Android.deleteFile(parsedId, filename);
+        }
+
         const parsed = parsedValue
         const newFiles = {...files}
 
