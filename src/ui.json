@@ -1,39 +1,14 @@
 {
-    "front_side": {
-        "ui:widget": "customfile",
-        "ui:options": {
-            "private": true
-        }
-    },
-    "back_side": {
-        "ui:widget": "customfile",
-        "ui:options": {
-            "private": true
-        }
-    },
-    "badge_photo": {
-        "ui:widget": "customfile",
-        "ui:options": {
-            "private": true
-        }
-    },
-    "ui:order": [
-        "surname",
-        "name",
-        "middle_name",
-        "document_number",
-        "issuing_authority",
-        "INN",
-        "issue_date",
-        "expiration_date",
-        "regions",
-        "front_side",
-        "back_side",
-        "badge_photo",
-"test"
-    ],
-    "INN": {
-        "ui:column": "2"
-    },
-    "newInput1": {}
+  "newInput1": {
+    "ui:widget": "autocomplete",
+    "ui:options": {
+      "webhook": "https://auto-responder-flex-dot-journal-bb5e3.uc.r.appspot.com/api/v1/questions/",
+      "params": "",
+      "searchField": "search",
+      "responseField": "text"
+    }
+  },
+  "ui:order": [
+    "newInput1"
+  ]
 }
