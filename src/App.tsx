@@ -7,6 +7,7 @@ import CustomButton from './components/CustomButton'
 import TextViewer from './components/text-editor/TextViewer';
 import AutoCompleteWidget from "./components/custom-widgets/autocomplete/AutoCompleteWidget";
 import FixedRadioWidget from "./components/custom-widgets/fixed-radio-widget/FixedRadioWidget";
+import CustomLinkWidget from "./components/custom-widgets/link-widget/CustomLinkWidget";
 
 declare global {
     interface Window {
@@ -28,7 +29,8 @@ function App() {
     const widgets = {
         customfile: CustomFileWidget,
         autocomplete: AutoCompleteWidget,
-        RadioWidget: FixedRadioWidget
+        RadioWidget: FixedRadioWidget,
+        customlink: CustomLinkWidget
     };
 
     useEffect(() => {
