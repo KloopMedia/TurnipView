@@ -124,7 +124,7 @@ function App() {
     }
 
     return (
-        <div style={{padding: 4}}>
+        <div style={{padding: "8px 0"}}>
             {renderTextViewer()}
             {renderPreviousTasks()}
             <Form schema={schema as any}
@@ -136,7 +136,7 @@ function App() {
                   onChange={handleChange}
                   onSubmit={handleSubmit}
             >
-                <CustomButton type={"submit"} disabled={isComplete}>Submit</CustomButton>
+                <CustomButton type={"submit"} disabled={isComplete}>Отправить</CustomButton>
             </Form>
         </div>
     );
