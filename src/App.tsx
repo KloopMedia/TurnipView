@@ -124,7 +124,7 @@ function App() {
     }
 
     return (
-        <div style={{padding: "8px 0"}}>
+        <div style={{paddingTop: "8px", paddingBottom: "16px"}}>
             {renderTextViewer()}
             {renderPreviousTasks()}
             <Form schema={schema as any}
