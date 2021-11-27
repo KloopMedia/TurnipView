@@ -8,6 +8,7 @@ import TextViewer from './components/text-editor/TextViewer';
 import AutoCompleteWidget from "./components/custom-widgets/autocomplete/AutoCompleteWidget";
 import FixedRadioWidget from "./components/custom-widgets/fixed-radio-widget/FixedRadioWidget";
 import CustomLinkWidget from "./components/custom-widgets/link-widget/CustomLinkWidget";
+import {Box} from "@mui/material";
 
 declare global {
     interface Window {
@@ -25,6 +26,7 @@ function App() {
     const [richText, setRichText] = useState("")
     const [isComplete, setIsComplete] = useState(false)
     const [allowChange, setAllowChange] = useState(false)
+    const [allowGoBack, setAllowGoBack] = useState(false)
 
     const widgets = {
         customfile: CustomFileWidget,
@@ -39,6 +41,7 @@ function App() {
                 setSchema(stageData.jsonSchema)
                 setUiSchema(stageData.uiSchema)
                 setIsComplete(stageData.isComplete)
+                setAllowGoBack(stageData.canGoBack)
                 setAllowChange(true)
             }
         )
@@ -97,6 +100,12 @@ function App() {
         }
     }
 
+    const handleOpenPrevious = () => {
+        if ("Android" in window) {
+            window.Android.onGoToPrevious();
+        }
+    }
+
     const renderPreviousTasks = () => {
         return previousTasks.map((task: { jsonSchema: string, uiSchema: string, responses: any }, i: number) => {
             const parsedJson = task.jsonSchema
@@ -136,7 +145,12 @@ function App() {
                   onChange={handleChange}
                   onSubmit={handleSubmit}
             >
-                <CustomButton type={"submit"} disabled={isComplete}>Отправить</CustomButton>
+                <Box display={"flex"}>
+                    <CustomButton type={"submit"} disabled={isComplete}>Отправить</CustomButton>
+                    {allowGoBack &&
+                    <CustomButton style={{margin: "0 8px"}} disabled={isComplete} onClick={handleOpenPrevious}>К
+                        предыдущему таску</CustomButton>}
+                </Box>
             </Form>
         </div>
     );
