@@ -9,6 +9,7 @@ import AutoCompleteWidget from "./components/custom-widgets/autocomplete/AutoCom
 import FixedRadioWidget from "./components/custom-widgets/fixed-radio-widget/FixedRadioWidget";
 import CustomLinkWidget from "./components/custom-widgets/link-widget/CustomLinkWidget";
 import {Box} from "@mui/material";
+import AudioWidget from "./components/custom-widgets/audio-widget/AudioWidget";
 
 declare global {
     interface Window {
@@ -32,7 +33,8 @@ function App() {
         customfile: CustomFileWidget,
         autocomplete: AutoCompleteWidget,
         RadioWidget: FixedRadioWidget,
-        customlink: CustomLinkWidget
+        customlink: CustomLinkWidget,
+        audio: AudioWidget
     };
 
     useEffect(() => {
